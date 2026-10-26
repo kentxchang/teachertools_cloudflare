@@ -1,0 +1,16 @@
+{
+  // Cloudflare 部署設定檔（Wrangler）
+  "name": "teacher-tools",                // ★ 網址會是 https://<name>.<您的子網域>.workers.dev（只能用英文小寫、數字、-）
+  "main": "src/worker.js",
+  "compatibility_date": "2025-09-01",
+  "assets": {
+    "directory": "./public"              // 網頁檔案所在資料夾
+  },
+  "durable_objects": {
+    "bindings": [{ "name": "CLASSDB", "class_name": "ClassDB" }]
+  },
+  "migrations": [
+    // 第一次部署時自動建立使用 SQLite 資料庫的 Durable Object（免費方案可用）
+    { "tag": "v1", "new_sqlite_classes": ["ClassDB"] }
+  ]
+}

@@ -1,0 +1,387 @@
+// ===== 下載作業清單、加扣分總表（PDF／Word） =====
+// dynamically append the modal overlay for Homework PDF Export
+document.addEventListener('DOMContentLoaded', () => {
+    const dialogHTML = `
+    <div id="homeworkPdfOverlay" class="overlay">
+        <div class="overlayContent" style="max-width: 500px; border-radius: 15px;">
+            <h2 style="margin-top: 0; color: #333;">下載作業清單</h2>
+            <div style="text-align: left; margin: 20px 0;">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">開始日期：</label>
+                <input type="date" id="hwPdfStartDate" style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 15px;">
+                
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">結束日期：</label>
+                <input type="date" id="hwPdfEndDate" style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 15px;">
+                
+                <label style="display: flex; align-items: center; cursor: pointer; user-select: none;">
+                    <input type="checkbox" id="hwPdfIncludeResults" style="width: 20px; height: 20px; margin-right: 10px;">
+                    <span style="font-size: 16px;">同時列出未完成作業的學生 (未交 / 待訂正)</span>
+                </label>
+            </div>
+            <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+                <button class="confirm-button" onclick="generateHomeworkReport('pdf')" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-size: 16px;">下載 PDF</button>
+                <button class="confirm-button" onclick="generateHomeworkReport('doc')" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-size: 16px;">下載 Word</button>
+                <button class="cancel-button" onclick="closeHomeworkPdfDialog()" style="background: #f3f4f6; color: #4b5563; border: 1px solid #d1d5db; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-size: 16px;">取消</button>
+            </div>
+        </div>
+    </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', dialogHTML);
+
+    const scoreDialogHTML = `
+    <div id="scoreDocOverlay" class="overlay">
+        <div class="overlayContent" style="max-width: 500px; border-radius: 15px;">
+            <h2 style="margin-top: 0; color: #333;">下載加扣分總表</h2>
+            <div style="text-align: left; margin: 20px 0;">
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">開始日期：</label>
+                <input type="date" id="scoreDocStartDate" style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 15px;">
+                
+                <label style="display: block; margin-bottom: 5px; font-weight: bold;">結束日期：</label>
+                <input type="date" id="scoreDocEndDate" style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; margin-bottom: 15px;">
+            </div>
+            <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+                <button class="confirm-button" onclick="generateScoreReport('pdf')" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-size: 16px;">下載 PDF</button>
+                <button class="confirm-button" onclick="generateScoreReport('doc')" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-size: 16px;">下載 Word</button>
+                <button class="cancel-button" onclick="closeScoreDocDialog()" style="background: #f3f4f6; color: #4b5563; border: 1px solid #d1d5db; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-size: 16px;">取消</button>
+            </div>
+        </div>
+    </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', scoreDialogHTML);
+
+});
+
+function openHomeworkPdfDialog() {
+    if (!currentClass) {
+        alert("請先進入一個班級！");
+        return;
+    }
+    const today = new Date();
+    const dayOfWeek = today.getDay() || 7; 
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - dayOfWeek + 1);
+    const sunday = new Date(today);
+    sunday.setDate(today.getDate() - dayOfWeek + 7);
+
+    const offset = today.getTimezoneOffset() * 60000;
+    const formatYMD = (d) => (new Date(d - offset)).toISOString().split('T')[0];
+
+    document.getElementById('hwPdfStartDate').value = formatYMD(monday);
+    document.getElementById('hwPdfEndDate').value = formatYMD(sunday);
+    document.getElementById('hwPdfIncludeResults').checked = false;
+
+    document.getElementById('homeworkPdfOverlay').style.display = 'flex';
+}
+
+function closeHomeworkPdfDialog() {
+    document.getElementById('homeworkPdfOverlay').style.display = 'none';
+}
+
+function generateHomeworkReport(format) {
+    const startDateStr = document.getElementById('hwPdfStartDate').value;
+    const endDateStr = document.getElementById('hwPdfEndDate').value;
+    const includeResults = document.getElementById('hwPdfIncludeResults').checked;
+
+    if (!startDateStr || !endDateStr) {
+        alert("請選擇開始與結束日期");
+        return;
+    }
+    const startDate = new Date(startDateStr);
+    const endDate = new Date(endDateStr);
+    if (startDate > endDate) {
+        alert("開始日期不能大於結束日期");
+        return;
+    }
+
+    const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+    
+    let htmlContent = `
+        <style>
+        .pdf-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; page-break-inside: auto; }
+        .pdf-table tr { page-break-inside: avoid; page-break-after: auto; }
+        .pdf-table th, .pdf-table td { border: 1px solid #cbd5e1; padding: 10px; }
+    </style>
+        <div style="font-family: 'Noto Sans TC', sans-serif; padding: 20px; color: #333;">
+            <h1 style="text-align: center; color: #1e3a8a; border-bottom: 2px solid #1e3a8a; padding-bottom: 10px; margin-bottom: 20px; font-size: 25px;">
+                ${currentClass} - 作業清單
+            </h1>
+            <p style="text-align: right; color: #555; font-size: 14px; margin-bottom: 10px;">
+                日期區間: ${startDateStr} ~ ${endDateStr}
+            </p>
+            <table class="pdf-table">
+                <thead>
+                    <tr style="background-color: #f1f5f9;">
+                        <th style="text-align: center; width: 15%;">日期</th>
+                        <th style="text-align: left; width: ${includeResults ? '45%' : '85%'};">作業內容</th>
+                        ${includeResults ? '<th style="text-align: left; width: 40%;">未完成名單</th>' : ''}
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+    let currentDate = new Date(startDate);
+    let hasAnyData = false;
+
+    while (currentDate <= endDate) {
+        const offset = currentDate.getTimezoneOffset() * 60000;
+        const dateKey = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
+        const dayOfWeekStr = weekdays[currentDate.getDay()];
+        const displayDate = `${currentDate.getMonth() + 1}/${currentDate.getDate()} (${dayOfWeekStr})`;
+
+        const hwList = homeworks[dateKey] || [];
+        let rowSpan = hwList.length > 0 ? hwList.length : 1;
+        
+        if (hwList.length === 0) {
+            htmlContent += `
+                <tr>
+                    <td style="text-align: center; font-weight: bold; background-color: #fafafa;">${displayDate}</td>
+                    <td style="color: #94a3b8; font-style: italic;">無作業</td>
+                    ${includeResults ? '<td >-</td>' : ''}
+                </tr>
+            `;
+        } else {
+            hasAnyData = true;
+            let checklistData = {};
+            if (includeResults) {
+                try {
+                    checklistData = JSON.parse(localStorage.getItem(`${getClassPrefix()}checklist_${dateKey}`)) || {};
+                } catch (e) {}
+            }
+
+            hwList.forEach((hw, index) => {
+                htmlContent += `<tr>`;
+                if (index === 0) {
+                    htmlContent += `<td rowspan="${rowSpan}" style="text-align: center; font-weight: bold; background-color: #fafafa; vertical-align: top;">${displayDate}</td>`;
+                }
+                htmlContent += `<td style="font-weight: 500;">• ${hw}</td>`;
+
+                if (includeResults) {
+                    let uncompletedStudents = [];
+                    if (checklistData[hw]) {
+                        for (let stu in checklistData[hw]) {
+                            const color = checklistData[hw][stu];
+                            if (color === 'red') {
+                                uncompletedStudents.push(`${stu}(未交)`);
+                            } else if (color === 'orange') {
+                                uncompletedStudents.push(`${stu}(未訂正)`);
+                            }
+                        }
+                    }
+                    const uncompletedText = uncompletedStudents.length > 0 
+                                            ? `<span style="color: #ef4444;">${uncompletedStudents.join('、')}</span>` 
+                                            : `<span style="color: #10b981;">全數完成</span>`;
+                    htmlContent += `<td style="font-size: 14px;">${uncompletedText}</td>`;
+                }
+                htmlContent += `</tr>`;
+            });
+        }
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    htmlContent += `
+                </tbody>
+            </table>
+        </div>
+    `;
+
+    closeHomeworkPdfDialog();
+    
+    if (format === 'pdf') {
+        const opt = {
+            margin:       10,
+            filename:     `${currentClass}_作業清單_${startDateStr}至${endDateStr}.pdf`,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            pagebreak:    { mode: ['css', 'legacy'] },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = htmlContent;
+        document.body.appendChild(tempDiv);
+        
+        html2pdf().set(opt).from(tempDiv).save().then(() => {
+            document.body.removeChild(tempDiv);
+        });
+    } else if (format === 'doc') {
+        const docContent = `
+            <!DOCTYPE html>
+            <html lang="zh-TW">
+            <head>
+                <meta charset="UTF-8">
+                <title>${currentClass} 作業清單</title>
+                <style>
+                    body { font-family: 'Microsoft JhengHei', Arial, sans-serif; }
+                    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                    th, td { padding: 10px; border: 1px solid black; }
+                    th { text-align: center; background-color: #f1f5f9; }
+                </style>
+            </head>
+            <body>
+                ${htmlContent}
+            </body>
+            </html>
+        `;
+        const blob = new Blob(['\ufeff' + docContent], { type: "application/msword" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `${currentClass}_作業清單_${startDateStr}至${endDateStr}.doc`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+}
+
+function openScoreDocDialog() {
+    if (!currentClass) {
+        alert("請先進入一個班級！");
+        return;
+    }
+    const today = new Date();
+    const dayOfWeek = today.getDay() || 7; 
+    const monday = new Date(today);
+    monday.setDate(today.getDate() - dayOfWeek + 1);
+    const sunday = new Date(today);
+    sunday.setDate(today.getDate() - dayOfWeek + 7);
+
+    const offset = today.getTimezoneOffset() * 60000;
+    const formatYMD = (d) => (new Date(d - offset)).toISOString().split('T')[0];
+
+    document.getElementById('scoreDocStartDate').value = formatYMD(monday);
+    document.getElementById('scoreDocEndDate').value = formatYMD(sunday);
+
+    document.getElementById('scoreDocOverlay').style.display = 'flex';
+}
+
+function closeScoreDocDialog() {
+    document.getElementById('scoreDocOverlay').style.display = 'none';
+}
+
+function generateScoreReport(format) {
+    const startDateStr = document.getElementById('scoreDocStartDate').value;
+    const endDateStr = document.getElementById('scoreDocEndDate').value;
+
+    if (!startDateStr || !endDateStr) {
+        alert("請選擇開始與結束日期");
+        return;
+    }
+    const startDate = new Date(startDateStr);
+    const endDate = new Date(endDateStr);
+    if (startDate > endDate) {
+        alert("開始日期不能大於結束日期");
+        return;
+    }
+
+    // Initialize total scores
+    const totalScores = {};
+    students.forEach(stu => totalScores[stu] = 0);
+
+    let currentDate = new Date(startDate);
+    while (currentDate <= endDate) {
+        const dateKey = `${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`;
+        if (scores[dateKey]) {
+            Object.keys(scores[dateKey]).forEach(key => {
+                // key format: "StudentName-index"
+                const stuName = key.split('-')[0];
+                if (totalScores[stuName] !== undefined) {
+                    totalScores[stuName] += scores[dateKey][key];
+                }
+            });
+        }
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    // Build Word Document HTML
+    let tableRows = '';
+    students.forEach((stu, index) => {
+        tableRows += `
+            <tr>
+                <td style="padding: 10px; border: 1px solid black; text-align: center;">${index + 1}</td>
+                <td style="padding: 10px; border: 1px solid black; text-align: center; font-weight: bold;">${stu}</td>
+                <td style="padding: 10px; border: 1px solid black; text-align: center; color: ${totalScores[stu] >= 0 ? '#10b981' : '#ef4444'}; font-weight: bold;">${totalScores[stu] > 0 ? '+' : ''}${totalScores[stu]}</td>
+            </tr>
+        `;
+    });
+
+    const docContent = `
+        <!DOCTYPE html>
+        <html lang="zh-TW">
+        <head>
+            <meta charset="UTF-8">
+            <title>${currentClass} 加扣分總表</title>
+            <style>
+                body { font-family: 'Microsoft JhengHei', Arial, sans-serif; }
+                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                th { padding: 10px; border: 1px solid black; text-align: center; background-color: #f1f5f9; }
+                td { padding: 10px; border: 1px solid black; text-align: center; }
+            </style>
+        </head>
+        <body>
+            <h2 style="text-align: center; color: #1e3a8a;">${currentClass} - 加扣分總表</h2>
+            <p style="text-align: right; color: #555;">統計區間: ${startDateStr} ~ ${endDateStr}</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">座號</th>
+                        <th style="width: 45%;">學生姓名</th>
+                        <th style="width: 40%;">總得分</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${tableRows}
+                </tbody>
+            </table>
+        </body>
+        </html>
+    `;
+
+    closeScoreDocDialog();
+
+    if (format === 'doc') {
+        const blob = new Blob(['\ufeff' + docContent], { type: "application/msword" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `${currentClass}_加扣分總表_${startDateStr}至${endDateStr}.doc`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    } else if (format === 'pdf') {
+        const pdfContent = `
+            <div style="font-family: 'Noto Sans TC', sans-serif; padding: 20px; color: #333;">
+                <h2 style="text-align: center; color: #1e3a8a; border-bottom: 2px solid #1e3a8a; padding-bottom: 10px; margin-bottom: 20px; font-size: 25px;">
+                    ${currentClass} - 加扣分總表
+                </h2>
+                <p style="text-align: right; color: #555; font-size: 14px; margin-bottom: 10px;">
+                    統計區間: ${startDateStr} ~ ${endDateStr}
+                </p>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; page-break-inside: auto;">
+                    <thead>
+                        <tr>
+                            <th style="padding: 10px; border: 1px solid #cbd5e1; text-align: center; background-color: #f1f5f9; width: 15%;">座號</th>
+                            <th style="padding: 10px; border: 1px solid #cbd5e1; text-align: center; background-color: #f1f5f9; width: 45%;">學生姓名</th>
+                            <th style="padding: 10px; border: 1px solid #cbd5e1; text-align: center; background-color: #f1f5f9; width: 40%;">總得分</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${tableRows}
+                    </tbody>
+                </table>
+            </div>
+        `;
+        
+        const opt = {
+            margin:       10,
+            filename:     `${currentClass}_加扣分總表_${startDateStr}至${endDateStr}.pdf`,
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            pagebreak:    { mode: ['css', 'legacy'] },
+            jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = pdfContent;
+        document.body.appendChild(tempDiv);
+        
+        html2pdf().set(opt).from(tempDiv).save().then(() => {
+            document.body.removeChild(tempDiv);
+        });
+    }
+}
+

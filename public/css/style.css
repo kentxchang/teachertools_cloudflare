@@ -1,0 +1,3968 @@
+
+
+
+
+
+
+        :root {
+            --theme-bg: linear-gradient(135deg, #fdf6e3 0%, #fff 100%);
+            --theme-card-bg: rgba(255, 255, 255, 0.75);
+            --theme-primary: #ffb7b2;
+            --theme-secondary: #ffdac1;
+            --theme-accent: #e2f0cb;
+            --theme-text: #4a4a4a;
+            --theme-border: 1px solid rgba(255, 255, 255, 0.6);
+            --theme-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --theme-glass: blur(12px);
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+            background: var(--theme-secondary);
+        }
+
+        h1 {
+            font-family: 'Noto Sans TC', sans-serif; font-weight: bold;
+            font-size: 3.5em; /* Original global size */
+            letter-spacing: 0.1em;
+            margin: 0;
+            padding: 20px 0;
+            color: white;
+            text-shadow: none;
+        }
+        
+        #header h1 {
+            font-size: 1.8em;
+            padding: 5px 0;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
+        }
+        
+        #header button {
+            padding: 6px 12px;
+            font-size: 14px;
+            margin: 0;
+        }
+        
+        #header .header-buttons {
+            gap: 5px;
+            align-items: center;
+        }
+
+        #header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--theme-primary);
+            padding: 8px 15px;
+            border: var(--theme-border);
+            border-radius: 16px;
+            box-shadow: var(--theme-shadow);
+            box-sizing: border-box;
+        }
+
+        .header-spacer {
+            width: 120px;
+            /* 與作業追蹤按鈕寬度相同，確保標題居中 */
+        }
+
+        .header-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* 普普風日曆樣式 */
+        #calendar {
+            width: 100%;
+            max-width: 1200px;
+            background: var(--theme-card-bg);
+backdrop-filter: var(--theme-glass);
+-webkit-backdrop-filter: var(--theme-glass);
+            padding: 30px;
+            border: var(--theme-border);
+            border-radius: 16px;
+            box-shadow: var(--theme-shadow);
+            margin-top: 20px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+
+        #calendarHeader {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            background: var(--theme-secondary);
+            padding: 10px 25px;
+            border: var(--theme-border);
+            border-radius: 16px;
+            box-shadow: var(--theme-shadow);
+            box-sizing: border-box;
+            margin-bottom: 25px;
+        }
+
+        #calendarHeader button {
+            background: var(--theme-primary);
+            color: #000000;
+            border: var(--theme-border);
+            padding: 6px 12px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 14px;
+            font-family: 'Noto Sans TC', sans-serif;
+            box-shadow: var(--theme-shadow);
+            transition: all 0.1s ease;
+        }
+
+        #calendarHeader button:hover {
+            transform: translate(2px, 2px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        #calendarHeader button:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        #calendarMonth {
+            font-family: 'Noto Sans TC', sans-serif; font-weight: bold;
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #FFFFFF;
+            text-shadow: none;
+            text-align: center;
+            flex: 1;
+            letter-spacing: 0.05em;
+        }
+
+        #calendarDays {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 12px;
+            max-width: 1200px;
+        }
+
+        .calendarHeaderDay {
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            font-size: 1.2em;
+            text-align: center;
+            background: var(--theme-accent);
+            padding: 15px 8px;
+            border: var(--theme-border);
+            border-radius: 16px;
+            color: #FFFFFF;
+            text-shadow: none;
+            box-shadow: var(--theme-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calendarDay {
+            width: auto;
+            height: 110px;
+            padding: 12px;
+            text-align: center;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            background: #FFFFFF;
+            border: var(--theme-border);
+            border-radius: 16px;
+            box-shadow: var(--theme-shadow);
+            box-sizing: border-box;
+            overflow: hidden;
+            transition: all 0.1s ease;
+        }
+
+        .calendarDay:hover {
+            transform: translate(3px, 3px);
+            box-shadow: var(--theme-shadow);
+            background: var(--theme-card-bg);
+backdrop-filter: var(--theme-glass);
+        }
+
+        .calendarDay:active {
+            transform: translate(6px, 6px);
+            box-shadow: none;
+        }
+
+        .calendarDay>div:first-child {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #1A237E;
+            margin-bottom: 5px;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        /* 週末樣式 - 週日和週六 */
+        .calendarDay:nth-child(8n+1),
+        .calendarDay:nth-child(8n+7) {
+            background: var(--theme-secondary);
+            border: var(--theme-border);
+        }
+
+        .calendarDay:nth-child(8n+1):hover,
+        .calendarDay:nth-child(8n+7):hover {
+            background: var(--theme-primary);
+            transform: translate(3px, 3px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        /* 有資料的週末 */
+        .calendarDay:nth-child(8n+1).hasData,
+        .calendarDay:nth-child(8n+7).hasData {
+            background: linear-gradient(135deg, rgba(173, 216, 230, 0.9) 0%, rgba(135, 206, 250, 0.9) 100%);
+            border: 1px solid rgba(30, 144, 255, 0.3);
+        }
+
+        .calendarDay:nth-child(8n+1).hasData:hover,
+        .calendarDay:nth-child(8n+7).hasData:hover {
+            background: linear-gradient(135deg, rgba(173, 216, 230, 0.95) 0%, rgba(135, 206, 250, 0.95) 100%);
+            border: 1px solid rgba(30, 144, 255, 0.4);
+        }
+
+        /* 統計欄樣式 */
+        .calendarDay:nth-child(8n+8) {
+            background: linear-gradient(135deg, rgba(255, 228, 181, 0.9) 0%, rgba(255, 218, 155, 0.9) 100%);
+            border: 1px solid rgba(255, 165, 0, 0.3);
+        }
+
+        .calendarDay:nth-child(8n+8):hover {
+            background: linear-gradient(135deg, rgba(255, 228, 181, 0.95) 0%, rgba(255, 215, 148, 0.95) 100%);
+            border: 1px solid rgba(255, 165, 0, 0.4);
+        }
+
+        /* 今天的日期樣式 */
+        .today {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%) !important;
+            border: 2px solid rgba(239, 68, 68, 0.5) !important;
+            position: relative;
+        }
+
+        .today::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #ef4444, #dc2626, #b91c1c, #ef4444);
+            border-radius: 17px;
+            z-index: -1;
+            animation: todayGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes todayGlow {
+            0% {
+                opacity: 0.3;
+            }
+
+            100% {
+                opacity: 0.6;
+            }
+        }
+
+        .today>div:first-child {
+            color: #dc2626 !important;
+            font-weight: 800 !important;
+            font-size: 1.6em !important;
+        }
+
+        /* 有資料的日期樣式 */
+        .hasData {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.1) 0%, rgba(22, 163, 74, 0.1) 100%) !important;
+            border: 1px solid rgba(34, 197, 94, 0.3) !important;
+            position: relative;
+        }
+
+        .hasData::after {
+            content: '●';
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            color: #22c55e;
+            font-size: 12px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .hasData:hover {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(22, 163, 74, 0.15) 100%) !important;
+            border: 1px solid rgba(34, 197, 94, 0.4) !important;
+        }
+
+        /* 日曆內按鈕樣式 - 小圓形設計 */
+        .calendarDay .additionalText {
+            display: flex;
+            gap: 3px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: nowrap;
+            /* 確保不換行 */
+        }
+
+        .calendarDay button {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.9) 0%, rgba(139, 92, 246, 0.9) 100%);
+            color: white;
+            border: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            /* 圓形按鈕 */
+            font-size: 7px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .calendarDay button:hover {
+            transform: scale(1.2);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .calendarDay .homeworkButton {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.9) 0%, rgba(29, 78, 216, 0.9) 100%);
+        }
+
+        .calendarDay .homeworkButton:hover {
+            background: linear-gradient(135deg, rgba(29, 78, 216, 1) 0%, rgba(37, 99, 235, 1) 100%);
+        }
+
+        /* 聯絡簿按鈕 (第二個按鈕) */
+        .calendarDay button:nth-of-type(2) {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.9) 0%, rgba(5, 150, 105, 0.9) 100%);
+            color: yellow !important;
+        }
+
+        .calendarDay button:nth-of-type(2):hover {
+            background: linear-gradient(135deg, rgba(5, 150, 105, 1) 0%, rgba(4, 120, 87, 1) 100%);
+        }
+
+        /* 檢核按鈕 (第三個按鈕) */
+        .calendarDay button:nth-of-type(3) {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.9) 0%, rgba(147, 51, 234, 0.9) 100%);
+            color: yellow !important;
+        }
+
+        .calendarDay button:nth-of-type(3):hover {
+            background: linear-gradient(135deg, rgba(147, 51, 234, 1) 0%, rgba(126, 34, 206, 1) 100%);
+        }
+
+        /* 統計按鈕樣式調整 */
+        .calendarDay .weekSummaryButton {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.9) 0%, rgba(217, 119, 6, 0.9) 100%);
+            width: 80% !important;
+            height: 80% !important;
+            padding: 8px !important;
+            font-size: 24px !important;
+            border-radius: 8px !important;
+            font-weight: 600;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            text-align: center !important;
+        }
+
+        .calendarDay .weekSummaryButton:hover {
+            background: linear-gradient(135deg, rgba(217, 119, 6, 1) 0%, rgba(180, 83, 9, 1) 100%);
+            transform: scale(1.05) !important;
+        }
+
+        /* 前一個月和下一個月的日期樣式 */
+        .prevMonthDay,
+        .nextMonthDay {
+            background: linear-gradient(135deg, rgba(156, 163, 175, 0.3) 0%, rgba(209, 213, 219, 0.3) 100%) !important;
+            color: #9ca3af !important;
+        }
+
+        .prevMonthDay>div:first-child,
+        .nextMonthDay>div:first-child {
+            color: #9ca3af !important;
+        }
+
+        #studentNamesInput {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: min(720px, calc(100vw - 32px));
+            max-height: calc(100vh - 40px);
+            box-sizing: border-box;
+            flex-direction: column;
+            gap: 12px;
+            background: #fff;
+            color: #333;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+            font-family: 'Noto Sans TC', sans-serif;
+            text-shadow: none;
+            z-index: 1000;
+        }
+
+        #studentNamesInput .sn-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--theme-primary);
+        }
+
+        #studentNamesInput h3 {
+            margin: 0;
+            font-size: 1.3em;
+            color: #333;
+        }
+
+        #studentNamesInput .sn-count {
+            font-size: 0.7em;
+            background: var(--theme-primary);
+            color: #333;
+            padding: 2px 10px;
+            border-radius: 12px;
+            vertical-align: middle;
+        }
+
+        #studentNamesInput .sn-close {
+            background: none;
+            border: none;
+            box-shadow: none;
+            font-size: 22px;
+            color: #888;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+
+        #studentNamesInput .sn-add {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        #studentNamesInput .sn-add input {
+            flex: 1;
+            min-width: 160px;
+        }
+
+        #studentNamesInput input,
+        #studentNamesInput textarea {
+            font-family: inherit;
+            font-size: 16px;
+            padding: 8px 10px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        #studentNamesInput input:focus,
+        #studentNamesInput textarea:focus {
+            border-color: #03A9F4;
+        }
+
+        #studentNamesInput .sn-btn {
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 15px;
+            border: none;
+            border-radius: 10px;
+            padding: 8px 16px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            white-space: nowrap;
+        }
+
+        #studentNamesInput .sn-btn-add { background: #4CAF50; color: #fff; }
+        #studentNamesInput .sn-btn-save { background: #03A9F4; color: #fff; }
+        #studentNamesInput .sn-btn-light { background: #eee; color: #333; }
+
+        #studentNamesInput .sn-bulk {
+            display: none;
+            gap: 8px;
+            align-items: flex-end;
+        }
+
+        #studentNamesInput .sn-bulk textarea {
+            flex: 1;
+            height: 120px;
+            resize: vertical;
+        }
+
+        #studentNamesInput .sn-list {
+            flex: 1;
+            min-height: 120px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            align-content: start;
+            gap: 8px;
+            padding: 4px;
+        }
+
+        #studentNamesInput .sn-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            color: #999;
+            padding: 30px 0;
+        }
+
+        #studentNamesInput .sn-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 8px;
+            background: #f7f7f7;
+            border: 2px solid transparent;
+            border-radius: 12px;
+        }
+
+        #studentNamesInput .sn-row.changed { border-color: #FFB300; background: #FFF8E1; }
+        #studentNamesInput .sn-row.added { border-color: #4CAF50; background: #E8F5E9; }
+        #studentNamesInput .sn-row.deleted { background: #FFEBEE; opacity: 0.7; }
+        #studentNamesInput .sn-row.deleted input { text-decoration: line-through; }
+
+        #studentNamesInput .sn-no {
+            min-width: 26px;
+            text-align: center;
+            font-weight: 700;
+            color: #888;
+        }
+
+        #studentNamesInput .sn-row input {
+            flex: 1;
+            min-width: 0;
+            padding: 6px 8px;
+            background: #fff;
+        }
+
+        #studentNamesInput .sn-del {
+            background: none;
+            border: none;
+            box-shadow: none;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        #studentNamesInput .sn-footer {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        #studentNamesInput .sn-hint {
+            flex: 1;
+            font-size: 13px;
+            color: #888;
+        }
+
+        #studentNamesInputOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+
+        #groupCountOverlay,
+        #groupStudentsOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #groupCount,
+        #groupStudents {
+            background: white;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            text-align: left;
+            position: relative;
+            overflow-y: auto;
+            max-height: 90%;
+        }
+
+        #groupStudents {
+            width: calc(800px + 200px);
+        }
+
+        #inputSection {
+            display: none;
+            width: 100%;
+            text-align: center;
+        }
+
+        #checklistSection {
+            display: none;
+            width: 100%;
+            text-align: center;
+        }
+
+        textarea {
+            width: 80%;
+            height: 150px;
+            margin-bottom: 12px;
+            font-size: 16px;
+            font-family: 'Noto Sans TC', sans-serif;
+            padding: 12px;
+            border: var(--theme-border);
+            border-radius: 16px;
+            background: #FFFFFF;
+            box-shadow: var(--theme-shadow);
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            border: var(--theme-border);
+            border-radius: 16px;
+            color: #000000;
+            margin: 6px;
+            transition: all 0.1s ease;
+            background-color: #FFEB3B;
+            box-shadow: var(--theme-shadow);
+        }
+
+        button:hover {
+            transform: translate(2px, 2px);
+            background-color: #FFF59D;
+            box-shadow: var(--theme-shadow);
+        }
+
+        .resetButton {
+            padding: 12px 24px;
+            font-size: 16px;
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .resetButton:hover {
+            background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* header區塊其他按鈕統一樣式 */
+        #header button:not(.resetButton) {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        /* 座位表按鈕 */
+        .seatingChartButton {
+            background: #FFD700;
+            color: #000000;
+            border: var(--theme-border);
+            border-radius: 16px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            text-shadow: none;
+            box-shadow: var(--theme-shadow);
+            white-space: nowrap;
+        }
+
+        .seatingChartButton:hover {
+            background: #FFEB3B;
+            transform: translate(2px, 2px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        .seatingChartButton:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        /* 作業追蹤按鈕 */
+        .homeworkTrackingButton {
+            background: #4CAF50;
+            color: #000000;
+            border: var(--theme-border);
+            border-radius: 16px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            text-shadow: none;
+            box-shadow: var(--theme-shadow);
+            white-space: nowrap;
+        }
+
+        .homeworkTrackingButton:hover {
+            background: #8BC34A;
+            transform: translate(2px, 2px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        .homeworkTrackingButton:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        /* 抽籤按鈕 */
+        .lotteryButton {
+            background: #E91E63;
+            color: #FFFFFF;
+            border: var(--theme-border);
+            border-radius: 16px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            text-shadow: none;
+            box-shadow: var(--theme-shadow);
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            white-space: nowrap;
+        }
+
+        .lotteryButton:hover {
+            background: #F06292;
+            transform: translate(2px, 2px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        .lotteryButton:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        /* 計時按鈕 */
+        .timerButton {
+            background: #9C27B0;
+            color: #FFFFFF;
+            border: var(--theme-border);
+            border-radius: 16px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            text-shadow: none;
+            box-shadow: var(--theme-shadow);
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            white-space: nowrap;
+        }
+
+        .timerButton:hover {
+            background: #BA68C8;
+            transform: translate(2px, 2px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        .timerButton:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        /* 抽籤系統樣式 */
+        #lotteryOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+
+        #lotteryPanel {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--theme-card-bg);
+backdrop-filter: var(--theme-glass);
+-webkit-backdrop-filter: var(--theme-glass);
+            border: var(--theme-border);
+            border-radius: 16px;
+            box-shadow: var(--theme-shadow);
+            padding: 30px;
+            z-index: 1001;
+            min-width: 600px;
+            max-width: 80vw;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        #lotteryPanel h3 {
+            font-family: 'Noto Sans TC', sans-serif; font-weight: bold;
+            font-size: 2em;
+            color: #1A237E;
+            text-shadow: none;
+            margin: 0 0 20px 0;
+            text-align: center;
+        }
+
+        #lotteryStudentGrid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .lottery-student {
+            background: var(--theme-secondary);
+            color: #000000;
+            border: var(--theme-border);
+            border-radius: 16px;
+            padding: 15px 10px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            text-align: center;
+            box-shadow: var(--theme-shadow);
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        .lottery-student.drawn {
+            background: #BDBDBD;
+            color: #666666;
+            opacity: 0.6;
+        }
+
+        .lottery-student.current-drawn {
+            background: var(--theme-secondary);
+            color: #FF0000;
+            font-weight: 600;
+            animation: current-drawn-pulse 1s ease-in-out;
+        }
+
+        @keyframes current-drawn-pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* 抽籤輪盤動畫中目前亮起的學生 */
+        .lottery-student.rolling {
+            background: #FFD54F;
+            color: #D32F2F;
+            transform: scale(1.12);
+            box-shadow: 0 0 0 4px #FF9800, 0 0 20px rgba(255, 152, 0, 0.8);
+        }
+
+        .lottery-student:hover:not(.drawn) {
+            transform: translate(2px, 2px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        .lottery-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .lottery-buttons button {
+            background: #FF6B6B;
+            color: #FFFFFF;
+            border: var(--theme-border);
+            border-radius: 16px;
+            padding: 15px 25px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            box-shadow: var(--theme-shadow);
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        .lottery-buttons button:hover {
+            transform: translate(2px, 2px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        .lottery-buttons button:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        #drawButton {
+            background: #4CAF50 !important;
+        }
+
+        #resetLotteryButton {
+            background: #FF9800 !important;
+            color: #000000 !important;
+        }
+
+        /* 抽中學生全螢幕顯示 */
+        #winnerDisplay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #winnerName {
+            font-family: 'Ma Shan Zheng', cursive;
+            font-size: 8vw;
+            color: #FFFFFF;
+            text-shadow: none;
+            text-align: center;
+            animation: winner-bounce 0.5s ease-out;
+            font-weight: 400;
+        }
+
+        #winnerDisplay {
+            overflow: hidden;
+        }
+
+        #winnerDisplay .confetti {
+            position: absolute;
+            top: -20px;
+            width: 10px;
+            height: 16px;
+            border-radius: 2px;
+            animation: confetti-fall linear forwards;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(110vh) rotate(720deg);
+            }
+        }
+
+        @keyframes winner-bounce {
+            0% {
+                transform: scale(0);
+            }
+
+            50% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* 計時器系統樣式 */
+        #timerOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+        }
+
+        #timerPanel {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #E1BEE7;
+            border: var(--theme-border);
+            border-radius: 16px;
+            box-shadow: var(--theme-shadow);
+            padding: 30px;
+            z-index: 1001;
+            min-width: 400px;
+        }
+
+        #timerPanel h3 {
+            font-family: 'Noto Sans TC', sans-serif; font-weight: bold;
+            font-size: 2em;
+            color: #1A237E;
+            text-shadow: none;
+            margin: 0 0 20px 0;
+            text-align: center;
+        }
+
+        .timer-presets {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+
+        .timer-presets button {
+            background: #9C27B0;
+            color: #FFFFFF;
+            border: var(--theme-border);
+            border-radius: 16px;
+            padding: 12px 20px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            box-shadow: var(--theme-shadow);
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        .timer-presets button:hover {
+            background: #BA68C8;
+            transform: translate(2px, 2px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        .timer-custom {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+        }
+
+        .timer-custom input {
+            width: 60px;
+            padding: 8px;
+            border: var(--theme-border);
+            border-radius: 16px;
+            box-shadow: var(--theme-shadow);
+            text-align: center;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        .timer-custom button {
+            background: #4CAF50;
+            color: #000000;
+            border: var(--theme-border);
+            border-radius: 16px;
+            padding: 8px 15px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            box-shadow: var(--theme-shadow);
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        .timer-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .timer-controls button {
+            background: #FF6B6B;
+            color: #FFFFFF;
+            border: var(--theme-border);
+            border-radius: 16px;
+            padding: 15px 25px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            box-shadow: var(--theme-shadow);
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        .timer-controls button:hover {
+            transform: translate(2px, 2px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        .timer-controls button:disabled {
+            background: #BDBDBD;
+            color: #666666;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        #startTimerButton:not(:disabled) {
+            background: #4CAF50 !important;
+            color: #000000 !important;
+        }
+
+        /* 計時器全螢幕顯示 */
+        #timerDisplay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #9C27B0, #E91E63);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #timerTime {
+            font-family: 'Noto Sans TC', sans-serif; font-weight: bold;
+            font-size: 15vw;
+            color: #FFFFFF;
+            text-shadow: none;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        #timerTime.finished {
+            font-family: 'Noto Serif TC', serif;
+            font-weight: 600;
+            font-size: 12vw;
+        }
+
+        #timerDisplay.tension {
+            animation: tension-pulse 1s infinite;
+            background: linear-gradient(45deg, #FF0000, #FF6B6B);
+        }
+
+        @keyframes tension-pulse {
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        #stopTimerButton {
+            background: #FF6B6B;
+            color: #FFFFFF;
+            border: var(--theme-border);
+            border-radius: 16px;
+            padding: 20px 40px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            font-size: 1.2em;
+            box-shadow: var(--theme-shadow);
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        #stopTimerButton:hover {
+            transform: translate(3px, 3px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        .timer-fullscreen-controls {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        #pauseTimerButton,
+        #resumeTimerButton {
+            background: #FF9800;
+            color: #000000;
+            border: var(--theme-border);
+            border-radius: 16px;
+            padding: 20px 40px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            font-size: 1.2em;
+            box-shadow: var(--theme-shadow);
+            cursor: pointer;
+            transition: all 0.1s ease;
+        }
+
+        #pauseTimerButton:hover,
+        #resumeTimerButton:hover {
+            transform: translate(3px, 3px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        #resumeTimerButton {
+            background: #4CAF50 !important;
+            color: #FFFFFF !important;
+        }
+
+        /* 輸入學生姓名按鈕 */
+        #header button[onclick="showStudentNamesInput()"] {
+            background: #E91E63;
+            color: #FFFFFF;
+            border: var(--theme-border);
+            border-radius: 16px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            text-shadow: none;
+            box-shadow: var(--theme-shadow);
+        }
+
+        #header button[onclick="showStudentNamesInput()"]:hover {
+            background: #F06292;
+            transform: translate(2px, 2px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        #header button[onclick="showStudentNamesInput()"]:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        /* 學生分組按鈕 */
+        #groupButton {
+            background: #9C27B0;
+            color: #FFFFFF;
+            border: var(--theme-border);
+            border-radius: 16px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            text-shadow: none;
+            box-shadow: var(--theme-shadow);
+        }
+
+        #groupButton:hover {
+            background: #BA68C8;
+            transform: translate(2px, 2px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        #groupButton:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        /* 座位表按鈕 */
+        #header button[onclick="showSeatingChart()"] {
+            background: #FF9800;
+            color: #000000;
+            border: var(--theme-border);
+            border-radius: 16px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            text-shadow: none;
+            box-shadow: var(--theme-shadow);
+        }
+
+        #header button[onclick="showSeatingChart()"]:hover {
+            background: #FFCC02;
+            transform: translate(2px, 2px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        #header button[onclick="showSeatingChart()"]:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        /* 兌獎按鈕 */
+        #header button[onclick="showRedeemOverlay()"] {
+            background: #F44336;
+            color: #FFFFFF;
+            border: var(--theme-border);
+            border-radius: 16px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            text-shadow: none;
+            box-shadow: var(--theme-shadow);
+        }
+
+        #header button[onclick="showRedeemOverlay()"]:hover {
+            background: #EF5350;
+            transform: translate(2px, 2px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        #header button[onclick="showRedeemOverlay()"]:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        .monthlySummaryButton {
+            background: #CDDC39;
+            color: #000000;
+            border: var(--theme-border);
+            border-radius: 16px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            text-shadow: none;
+            box-shadow: var(--theme-shadow);
+        }
+
+        .monthlySummaryButton:hover {
+            background: #D4E157;
+            transform: translate(2px, 2px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        .monthlySummaryButton:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        .scoreTable {
+            margin-top: 20px;
+            border-collapse: separate;
+            border-spacing: 2px;
+            display: inline-block;
+            vertical-align: top;
+            margin-right: 20px;
+            background-color: transparent;
+            border: var(--theme-border);
+            border-radius: 16px;
+            overflow: visible;
+            box-shadow: var(--theme-shadow);
+            transition: all 0.1s ease;
+        }
+
+        .scoreTable:hover {
+            transform: translateY(2px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        .groupScoreTable {
+            background: #C8E6C9;
+            border: var(--theme-border);
+        }
+
+        .scoreTable,
+        .scoreTable th,
+        .scoreTable td,
+        .groupScoreTable th,
+        .groupScoreTable td {
+            border: var(--theme-border);
+        }
+
+        .scoreTable td,
+        .groupScoreTable td {
+            background: #FFFFFF;
+        }
+
+        .scoreTable th,
+        .groupScoreTable th {
+            background: #9C27B0;
+            color: #FFFFFF;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            text-shadow: none;
+        }
+
+        .scoreTable th,
+        .scoreTable td,
+        .groupScoreTable th,
+        .groupScoreTable td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        .scoreTable tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        .scoreTable tbody tr:hover {
+            background-color: #e3f2fd;
+            transform: scale(1.02);
+        }
+
+        .scoreTable button {
+            background: #FF5722;
+            color: #FFFFFF;
+            border: var(--theme-border);
+            padding: 6px 12px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            transition: all 0.1s ease;
+            margin: 0 3px;
+            box-shadow: var(--theme-shadow);
+        }
+
+        .scoreTable button:hover {
+            background: #FF7043;
+            transform: translate(1px, 1px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        .scoreTable button:active {
+            transform: translate(3px, 3px);
+            box-shadow: none;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: red;
+        }
+
+        #chart {
+            margin-top: 20px;
+            width: 500px;
+        }
+
+        #controlSection {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        #footer {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 14px;
+            color: #fff;
+            text-shadow: none;
+        }
+
+        #footer a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        #footer a:hover {
+            text-decoration: underline;
+        }
+
+        .batchControl {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .batchControl input {
+            margin: 0 10px;
+            padding: 5px;
+            font-size: 16px;
+            width: 60px;
+            text-align: center;
+        }
+
+        #selectedDate {
+            margin-top: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: none;
+        }
+
+        .weekSummaryButton {
+            font-size: 24px;
+            color: white;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.9) 0%, rgba(217, 119, 6, 0.9) 100%);
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 80%;
+            width: 80%;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .weekSummaryButton:hover {
+            background: linear-gradient(135deg, rgba(217, 119, 6, 1) 0%, rgba(180, 83, 9, 1) 100%);
+            transform: scale(1.05);
+        }
+
+        #weeklySummaryOverlay,
+        #monthlySummaryOverlay {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 60%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transform: translate(-50%, -50%);
+        }
+
+        #weeklySummaryContent,
+        #monthlySummaryContent {
+            background: white;
+            width: 75%;
+            height: 100%;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        #inputButton2,
+        #saveButton2,
+        #loadButton2,
+        #resetButton2 {
+            display: none;
+        }
+
+        .summary-text-overlay {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            width: 100px;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            font-size: 24px;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .control-buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .control-buttons button {
+            flex: 1;
+        }
+
+        .control-buttons button:first-child {
+            margin-right: auto;
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .control-buttons button:nth-child(2) {
+            background-color: #2196f3;
+            color: white;
+        }
+
+        .control-buttons button:nth-child(3) {
+            background-color: #9c27b0;
+            color: white;
+        }
+
+        .control-buttons button:last-child {
+            margin-left: auto;
+            background-color: #ff9800;
+            color: white;
+        }
+
+        .bottom-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .additionalText {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            background-color: transparent;
+            font-size: 25px;
+            color: red;
+        }
+
+        .additionalText button {
+            cursor: pointer;
+            padding: 5px;
+            margin: 2px;
+            border: none;
+            background-color: #d8f3dc;
+            font-size: 15px;
+            color: red;
+            font-weight: bold;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+        }
+
+        .additionalText button:hover {
+            background-color: #c2e7c7;
+        }
+
+        .additionalText .homeworkButton {
+            background-color: blue;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .additionalText .hide {
+            display: none;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(3px);
+        }
+
+        .overlayContent {
+            background: var(--theme-card-bg);
+backdrop-filter: var(--theme-glass);
+-webkit-backdrop-filter: var(--theme-glass);
+            
+            
+            
+            padding: 25px;
+            border: var(--theme-border);
+            border-radius: 16px;
+            text-align: center;
+            position: relative;
+            box-shadow: var(--theme-shadow);
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            color: #000000;
+            max-height: 95%;
+            min-height: 80%;
+            overflow-y: auto;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .assignmentList {
+            text-align: left;
+            font-size: 100px;
+            color: blue;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .status-table {
+            width: 48%;
+            margin: 1%;
+            border-collapse: collapse;
+            box-shadow: none;
+            border-radius: 16px;
+        }
+
+        .status-table th,
+        .status-table td {
+            border: var(--theme-border);
+            padding: 10px;
+            text-align: center;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .status-table th {
+            font-size: 18px;
+            color: blue;
+        }
+
+        .status-table th:nth-child(2),
+        .status-table td:nth-child(2) {
+            width: 33.33%;
+        }
+
+        .status-table th:nth-child(3),
+        .status-table td:nth-child(3) {
+            width: 33.33%;
+        }
+
+        .status-table th:nth-child(4),
+        .status-table td:nth-child(4) {
+            width: 33.33%;
+        }
+
+        .status-table td {
+            color: initial;
+        }
+
+        @media print {
+            @page {
+                size: landscape;
+            }
+
+            body {
+                -webkit-print-color-adjust: exact;
+            }
+        }
+
+        #tables-container table,
+        #tables-container th,
+        #tables-container td {
+            width: 90px;
+            height: 15px;
+            border: var(--theme-border);
+            background-color: #dcdcdc;
+        }
+
+        #tables-container th,
+        #tables-container td {
+            padding: 0;
+            text-align: center;
+            text-shadow: 2px 2px 4px #aaa;
+            background-color: #f0e68c;
+        }
+
+        #tables-container th {
+            font-weight: bold;
+            border: var(--theme-border);
+        }
+
+        .status-button {
+            width: 100%;
+            height: 100%;
+            font-size: 14px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px #aaa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: initial;
+            border-radius: 4px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            border: var(--theme-border);
+            background-color: #dcdcdc;
+            margin-left: 0px;
+        }
+
+        .status-button:hover {
+            opacity: 0.8;
+        }
+
+        .status-toggle-button {
+            margin: 20px auto;
+            padding: 12px 24px;
+            font-size: 16px;
+            background: linear-gradient(135deg, #9370db 0%, #7b68ee 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: block;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .status-toggle-button:hover {
+            background: linear-gradient(135deg, #7b68ee 0%, #6a5acd 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 作業狀態表格美化 */
+        #statusContainer table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            border-collapse: collapse;
+        }
+
+        #statusContainer table th {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 12px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        #statusContainer table td {
+            padding: 10px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        #statusContainer table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        #statusContainer table tbody tr:hover {
+            background-color: #e3f2fd;
+        }
+
+        /* 作業檢核表格美化 */
+        #tablesContainer table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin: 15px;
+            border-collapse: collapse;
+            transition: transform 0.2s ease;
+        }
+
+        #tablesContainer table:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        #tablesContainer table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 12px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        #tablesContainer table td {
+            padding: 10px 8px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            position: relative;
+        }
+
+        #tablesContainer table tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        #tablesContainer table tbody tr:hover {
+            background-color: #e8f4fd;
+        }
+
+        #tablesContainer table .student-name {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            font-weight: bold;
+            color: #2d3436;
+            border-right: 2px solid #e17055;
+        }
+
+        #tablesContainer .status-button {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        #tablesContainer .status-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 學生姓名表格美化 */
+        #studentTable {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            margin: 20px 0;
+        }
+
+        #studentTable thead th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 12px;
+            font-weight: bold;
+            text-align: center;
+            font-size: 16px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        #studentTable tbody td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+
+        #studentTable tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        #studentTable tbody tr:hover {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            transform: scale(1.02);
+            transition: all 0.3s ease;
+        }
+
+        #studentTable tbody tr td:first-child {
+            font-weight: bold;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+        }
+
+        #studentTable button {
+            background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        #studentTable button:hover {
+            background: linear-gradient(135deg, #45a049 0%, #3d8b40 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .export-button {
+            padding: 12px 24px;
+            font-size: 16px;
+            background: linear-gradient(135deg, #008cba 0%, #005f73 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .export-button:hover {
+            background: linear-gradient(135deg, #005f73 0%, #003f4f 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 控制按鈕統一樣式 */
+        .control-buttons button:not(.status-toggle-button):not(.export-button) {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+            color: white;
+        }
+
+        /* 回上一頁按鈕 */
+        .control-buttons button[onclick="saveAndBack()"] {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        }
+
+        .control-buttons button[onclick="saveAndBack()"]:hover {
+            background: linear-gradient(135deg, #495057 0%, #343a40 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 點名按鈕樣式 */
+        .control-buttons button[onclick="showAttendance()"] {
+            background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+        }
+
+        .control-buttons button[onclick="showAttendance()"]:hover {
+            background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 隱藏/顯示學生按鈕 */
+        #toggleHideBtn {
+            background: linear-gradient(135deg, #fd7e14 0%, #e85d04 100%);
+        }
+
+        #toggleHideBtn:hover {
+            background: linear-gradient(135deg, #e85d04 0%, #d00000 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .highlight {
+            background-color: #ADD8E6;
+        }
+
+        .tables-container-wrapper {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .import-button,
+        .export-button-main {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        .import-button {
+            background: linear-gradient(135deg, #d8bfd8 0%, #c8a2c8 100%);
+            color: #2c3e50;
+        }
+
+        .import-button:hover {
+            background: linear-gradient(135deg, #c8a2c8 0%, #b899b8 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .export-button-main {
+            background: linear-gradient(135deg, #c8a2c8 0%, #d8bfd8 100%);
+            color: #2c3e50;
+        }
+
+        .export-button-main:hover {
+            background: linear-gradient(135deg, #b899b8 0%, #c8a2c8 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 側邊選單樣式 */
+        #sideMenu {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 280px;
+            height: 100vh;
+            background: var(--theme-card-bg);
+backdrop-filter: var(--theme-glass);
+-webkit-backdrop-filter: var(--theme-glass);
+            
+            
+            
+            border-right: var(--theme-border);
+            box-shadow: var(--theme-shadow);
+            transition: left 0.3s ease-in-out;
+            z-index: 1000;
+            padding: 70px 20px 20px 20px;
+            box-sizing: border-box;
+            border-radius: 16px;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        #sideMenu.open {
+            left: 0;
+        }
+
+        #menuToggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #E91E63;
+            border: var(--theme-border);
+            border-radius: 16px;
+            width: 55px;
+            height: 55px;
+            font-size: 24px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            color: #FFFFFF;
+            cursor: pointer;
+            box-shadow: var(--theme-shadow);
+            transition: all 0.1s ease;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(3deg);
+        }
+
+        #menuToggle:hover {
+            background: #F06292;
+            transform: rotate(3deg) translate(3px, 3px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        #menuToggle:active {
+            transform: rotate(3deg) translate(6px, 6px);
+            box-shadow: none;
+        }
+
+        .menu-button {
+            width: 100%;
+            margin: 7px 0;
+            padding: 11px 13px;
+            font-size: 14px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            border: var(--theme-border);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            box-shadow: var(--theme-shadow);
+            text-shadow: none;
+            color: #000000;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .menu-button:hover {
+            transform: translate(2px, 2px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        .menu-button:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        .menu-button.student-input {
+            background: #4CAF50;
+        }
+
+        .menu-button.group-manage {
+            background: #9C27B0;
+            color: #FFFFFF;
+        }
+
+        .menu-button.seating-chart {
+            background: #FF9800;
+        }
+
+        .menu-button.reward-system {
+            background: #F44336;
+            color: #FFFFFF;
+        }
+
+        .menu-button.export-data {
+            background: #00BCD4;
+        }
+
+        .menu-button.import-data {
+            background: #795548;
+            color: #FFFFFF;
+        }
+
+        .menu-button.reset-data {
+            background: #E91E63;
+            color: #FFFFFF;
+        }
+
+        .menu-section {
+            margin: 15px 0;
+            border-bottom: var(--theme-border);
+            padding-bottom: 15px;
+        }
+
+        .menu-section:last-child {
+            border-bottom: none;
+        }
+
+        /* 點名圖層普普風樣式 */
+        #attendanceOverlay .overlayContent {
+            background: #E1F5FE;
+            
+            
+            
+            border: var(--theme-border);
+            border-radius: 16px;
+            box-shadow: var(--theme-shadow);
+        }
+
+        #attendanceOverlay h2 {
+            text-align: center;
+            color: #FFFFFF;
+            background: #2196F3;
+            font-family: 'Noto Sans TC', sans-serif; font-weight: bold;
+            font-size: 28px;
+            margin: -25px -25px 20px -25px;
+            padding: 15px 25px;
+            border-bottom: var(--theme-border);
+            text-shadow: none;
+            letter-spacing: 0.05em;
+        }
+
+        #attendanceTableContainer table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 3px;
+            background: transparent;
+            border-radius: 16px;
+            overflow: visible;
+            box-shadow: none;
+        }
+
+        #attendanceTableContainer th {
+            background: var(--theme-accent);
+            color: #FFFFFF;
+            padding: 12px 8px;
+            text-align: center;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            border: var(--theme-border);
+            cursor: pointer;
+            transition: all 0.1s ease;
+            text-shadow: none;
+            box-shadow: var(--theme-shadow);
+        }
+
+        #attendanceTableContainer th:hover {
+            background: #FF8A65;
+            transform: translate(2px, 2px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        #attendanceTableContainer th:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        #attendanceTableContainer td {
+            padding: 10px 8px;
+            text-align: center;
+            border: var(--theme-border);
+            background: #FFFFFF;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        #attendanceTableContainer td:first-child {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.9) 0%, rgba(255, 235, 59, 0.9) 100%);
+            color: #2c3e50;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        }
+
+        #attendanceTableContainer td:first-child:hover {
+            background: linear-gradient(135deg, rgba(255, 235, 59, 1) 0%, rgba(255, 193, 7, 1) 100%);
+            transform: scale(1.05);
+        }
+
+        #attendanceTableContainer td:not(:first-child) {
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 6px;
+            margin: 2px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        #attendanceTableContainer td:not(:first-child):hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* 出席狀態樣式 */
+        .attendance-present {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+            color: white !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .attendance-absent {
+            background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%) !important;
+            color: white !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .themeButton {
+            padding: 15px 30px;
+            margin: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            color: white;
+            font-family: 'Courier New', Courier, monospace;
+            transition: transform 0.3s ease;
+        }
+
+        .themeButton:hover {
+            transform: scale(1.1);
+        }
+
+        .theme1 {
+            background: linear-gradient(to right, #ffecd2, #fcb69f);
+        }
+
+        .theme2 {
+            background: linear-gradient(to right, #3a1c71, #d76d77, #ffaf7b);
+        }
+
+        .theme3 {
+            background: linear-gradient(to right, #43cea2, #185a9d);
+        }
+
+        .theme4 {
+            background: linear-gradient(to right, #4568dc, #b06ab3);
+        }
+
+        .themeButtonText {
+            font-size: 18px;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .buttonContainer {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .status-table-bg-1 {
+            background-color: #ffe4e1;
+        }
+
+        .status-table-bg-2 {
+            background-color: #e6e6fa;
+        }
+
+        .status-table-bg-3 {
+            background-color: #f0fff0;
+        }
+
+        .status-table-bg-4 {
+            background-color: #fff5ee;
+        }
+
+        .status-table-bg-5 {
+            background-color: #f5f5dc;
+        }
+
+        .student-name {
+            background-color: #f0e68c;
+            border: var(--theme-border);
+        }
+
+        .summarySection {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+
+        .summarySection>div {
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        .rightArrow,
+        .leftArrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 50%;
+            z-index: 10;
+        }
+
+        .rightArrow {
+            right: 10px;
+        }
+
+        .leftArrow {
+            left: 10px;
+        }
+
+        .groupContainer {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 25px;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 12px;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .group {
+            background: linear-gradient(135deg, #fff9c4 0%, #f4d03f 100%);
+            padding: 20px;
+            border-radius: 12px;
+            width: 22%;
+            min-width: 180px;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            border: 2px solid #f39c12;
+            transition: all 0.3s ease;
+        }
+
+        .group:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            border-color: #e67e22;
+        }
+
+        .group h4 {
+            margin: 0 0 15px;
+            font-size: 18px;
+            text-align: center;
+            color: #d35400;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .group ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .group ul li {
+            padding: 10px 12px;
+            margin: 8px 0;
+            background: linear-gradient(135deg, #ffffff 0%, #ecf0f1 100%);
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
+            cursor: grab;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            color: #2c3e50;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .group ul li:hover {
+            background: linear-gradient(135deg, #e8f4fd 0%, #d6eaf8 100%);
+            border-color: #3498db;
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        body2 {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f5e6f8;
+        }
+
+        header2 {
+            background-color: #d7aefb;
+            color: white;
+            padding: 10px 0;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: block;
+            clear: both;
+        }
+
+        main2 {
+            width: 90%;
+            max-width: 1200px;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            display: block;
+            clear: both;
+        }
+
+        /* section2、h22、button2 是自訂標籤，瀏覽器預設為行內元素，需指定顯示方式才不會擠成一行重疊 */
+        section2 {
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        section2:last-child {
+            margin-top: 20px;
+        }
+
+        h22 {
+            display: block;
+            color: #5e35b1;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        button2 {
+            display: inline-block;
+            background-color: #d7aefb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        button2:hover {
+            background-color: #ba68c8;
+        }
+
+        /* 「輸入學生」按鈕已隱藏（直接使用班級名單），整個區塊不必顯示 */
+        #inputSection2 {
+            display: none;
+        }
+
+        #selectSection2,
+        #settingsSection2,
+        #groupSettingsSection2 {
+            display: inline-block;
+            vertical-align: top;
+            margin: 0 8px 10px;
+            padding: 12px 20px;
+            background: #faf5fc;
+            border-radius: 12px;
+        }
+
+        #selectSection2 section2,
+        #settingsSection2 section2,
+        #groupSettingsSection2 section2 {
+            margin-bottom: 0;
+        }
+
+        #seatingChartContent select,
+        #seatingChartContent input[type="number"] {
+            font-family: inherit;
+            font-size: 16px;
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+
+        #seatingChartContent input[type="number"] {
+            width: 70px;
+        }
+
+        #settingsSection2,
+        #groupSettingsSection2 {
+            display: none;
+        }
+
+        #seatingChart2 {
+            display: grid;
+            gap: 8px;
+            justify-content: center;
+            margin: 20px auto 0 auto;
+            width: fit-content;
+            max-width: 100%;
+            overflow: visible;
+        }
+
+        .seat2,
+        .student-seat2 {
+            background-color: #FFD700;
+            border: var(--theme-border);
+            padding: 10px;
+            border-radius: 15px;
+            text-align: center;
+            min-height: 40px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Arial Black', Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #000;
+            box-shadow: var(--theme-shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: pre-line;
+            line-height: 1.3;
+            flex-direction: column;
+        }
+
+        .seat2:hover,
+        .student-seat2:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: var(--theme-shadow);
+            background-color: #FF6B6B;
+        }
+
+        .student-seat2 {
+            font-size: 16px;
+            white-space: pre-line;
+            min-width: 70px;
+            max-width: 90px;
+            word-wrap: break-word;
+            text-align: center;
+            padding: 8px;
+        }
+
+        .seat2 {
+            font-size: 16px;
+            min-width: 70px;
+            max-width: 90px;
+            word-wrap: break-word;
+            padding: 8px;
+        }
+
+        #seatingChartContent h1 {
+            font-family: inherit;
+            color: white;
+            background-color: #2E7D32;
+            border: var(--theme-border);
+            padding: 15px 25px;
+            border-radius: 8px;
+            text-shadow: none;
+            box-shadow: var(--theme-shadow);
+            margin: 20px 0;
+            display: inline-block;
+        }
+
+        .blackboard2 {
+            grid-column: span 5;
+            text-align: center;
+            background-color: #2E7D32;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .group2 {
+            border: 2px solid #d7aefb;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px;
+            display: grid;
+            gap: 10px;
+            grid-template-columns: repeat(3, 1fr);
+            min-height: 150px;
+        }
+
+        .footer2 {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            color: #5e35b1;
+        }
+
+        .footer2 a {
+            color: #5e35b1;
+            text-decoration: none;
+        }
+
+        .footer2 a:hover {
+            text-decoration: underline;
+        }
+
+        #homeworkTrackingContent {
+            width: 80%;
+            height: 80%;
+            overflow: auto;
+        }
+
+        #seatingChartOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 2100;
+        }
+
+        #seatingChartContent {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+            box-shadow: var(--theme-shadow);
+            font-weight: bold;
+            color: black;
+            max-height: 90%;
+            overflow-y: auto;
+        }
+
+        #homeworkTrackingOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #homeworkTrackingContent {
+            background: white;
+            width: 80%;
+            height: 80%;
+            overflow: auto;
+            border-radius: 10px;
+            padding: 20px;
+            position: relative;
+        }
+
+        #redeemOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20px 20px, #FFD700 2px, transparent 2px),
+                radial-gradient(circle at 60px 60px, #FF69B4 2px, transparent 2px),
+                #4169E1;
+            , 120px 120px;
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #redeemOverlayContent {
+            width: 80%;
+            height: 80%;
+            background-color: white;
+            overflow: auto;
+            position: relative;
+            padding: 20px;
+            border: var(--theme-border);
+            box-shadow: var(--theme-shadow);
+        }
+
+        #redeemOverlayContent h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        #redeemOverlayContent .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            margin: 0 auto;
+        }
+
+        #redeemOverlayContent table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        #redeemOverlayContent th,
+        #redeemOverlayContent td {
+            padding: 10px;
+            border: var(--theme-border);
+            text-align: center;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        #redeemOverlayContent th {
+            background-color: #FFD700;
+            color: #000;
+            font-weight: 700;
+        }
+
+        #redeemOverlayContent .button {
+            padding: 10px 15px;
+            font-size: 14px;
+            cursor: pointer;
+            border: var(--theme-border);
+            background-color: #FF69B4;
+            color: #000;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            transition: transform 0.2s ease;
+            box-shadow: var(--theme-shadow);
+        }
+
+        #redeemOverlayContent .button:hover {
+            transform: translate(-2px, -2px);
+        }
+
+        #redeemOverlayContent .reset-button {
+            background-color: #FF4444;
+        }
+
+        #redeemOverlayContent .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        #redeemOverlayContent .import-label {
+            font-size: 16px;
+            padding: 10px 15px;
+            color: #000;
+            background-color: #32CD32;
+            border: var(--theme-border);
+            cursor: pointer;
+            box-shadow: var(--theme-shadow);
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            transition: transform 0.2s ease;
+            display: inline-block;
+            text-align: center;
+        }
+
+        #redeemOverlayContent .import-label:hover {
+            transform: translate(-2px, -2px);
+        }
+
+        #redeemOverlayContent .reset-container {
+            position: fixed;
+            bottom: 10px;
+            left: 10px;
+        }
+
+        #redeemOverlayContent .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+
+        #redeemOverlayContent .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            width: 300px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        #redeemOverlayContent .modal-content h3 {
+            margin-top: 0;
+        }
+
+        #redeemOverlayContent .modal-content input {
+            width: 80%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        #viewHomeworkOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30px 30px, #FF69B4 2px, transparent 2px),
+                radial-gradient(circle at 70px 70px, #32CD32 2px, transparent 2px),
+                #9370DB;
+            , 140px 140px;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #viewHomeworkOverlay .overlayContent {
+            background: white;
+            padding: 20px;
+            border: var(--theme-border);
+            box-shadow: var(--theme-shadow);
+            text-align: center;
+            max-width: 80%;
+            max-height: 80%;
+            overflow: auto;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        #assignmentList {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .highlighted-assignment {
+            font-size: 5rem;
+            /* 加大字體 */
+            font-weight: bold;
+            color: #333;
+            text-align: left;
+            margin: 10px 0;
+            animation: fadeIn 0.5s ease-in-out;
+            /* 添加淡入效果 */
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+
+
+
+        /* 作業追蹤區塊美化 */
+        .homework-search-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .homework-search-panel {
+            flex: 1;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .homework-search-panel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .date-search-panel {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left: 4px solid #2196f3;
+        }
+
+        .student-search-panel {
+            background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+            border-left: 4px solid #9c27b0;
+        }
+
+        .homework-search-panel h4 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .homework-search-panel p {
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .homework-search-panel input,
+        .homework-search-panel select {
+            border: var(--theme-border);
+            padding: 8px;
+            font-size: 14px;
+            font-family: 'Noto Sans TC', sans-serif;
+            transition: transform 0.2s ease;
+            box-shadow: var(--theme-shadow);
+        }
+
+        .homework-search-panel input:focus,
+        .homework-search-panel select:focus {
+            outline: none;
+            transform: translate(-1px, -1px);
+        }
+
+        .homework-search-panel button {
+            background: #32CD32;
+            color: #000;
+            border: var(--theme-border);
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            transition: transform 0.2s ease;
+            box-shadow: var(--theme-shadow);
+        }
+
+        .homework-search-panel button:hover {
+            transform: translate(-2px, -2px);
+        }
+
+        .homework-search-panel button:active {
+            transform: translate(0, 0);
+        }
+
+        /* 作業追蹤分頁樣式 */
+        .homework-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: var(--theme-border);
+        }
+
+        .homework-tab-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: #f0f0f0;
+            border: var(--theme-border);
+            border-bottom: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            box-shadow: var(--theme-shadow);
+            position: relative;
+            bottom: -3px;
+        }
+
+        .homework-tab-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .homework-tab-btn.active {
+            background: #fff;
+            box-shadow: var(--theme-shadow);
+            transform: translateY(-3px);
+            border-bottom: 3px solid #fff;
+        }
+
+        .homework-tab-content {
+            display: none;
+        }
+
+        .homework-tab-content.active {
+            display: block;
+        }
+
+        .homework-list-panel {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-left: 4px solid #ff9800;
+        }
+
+        /* 座位表視圖樣式 */
+        #seatingViewSection {
+            display: none;
+            width: 100%;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        #seatingScoreChart {
+            display: grid;
+            gap: 15px;
+            padding: 20px;
+            max-width: 1200px;
+            width: fit-content;
+            margin: 0 auto;
+            justify-content: center;
+            align-content: start;
+        }
+
+        .seating-student {
+            background: #FFFFFF;
+            border: var(--theme-border);
+            border-radius: 16px;
+            padding: 10px;
+            box-shadow: var(--theme-shadow);
+            text-align: center;
+            font-weight: 700;
+            font-size: 14px;
+            min-height: 140px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .seating-student.empty {
+            background: #E0E0E0;
+            border-color: #BDBDBD;
+            box-shadow: 2px 2px 0px #BDBDBD;
+        }
+
+        .seating-student-name {
+            font-size: 32px;
+            margin-bottom: 8px;
+            color: #000;
+        }
+
+        .seating-student-score {
+            font-size: 28px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .seating-score-buttons {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .seating-score-btn {
+            width: 25px;
+            height: 25px;
+            border: var(--theme-border);
+            background: #32CD32;
+            color: #000;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            box-shadow: var(--theme-shadow);
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .seating-score-btn.minus {
+            background: #FF6B6B;
+        }
+
+        .seating-score-btn:hover {
+            transform: translate(1px, 1px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        .seating-blackboard {
+            grid-column: 1 / -1;
+            background: #2E7D32;
+            color: #FFFFFF;
+            text-align: center;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: 700;
+            border: var(--theme-border);
+            box-shadow: var(--theme-shadow);
+            margin-bottom: 10px;
+        }
+
+        /* 教室座位表生成器浮動區塊切齊畫面上緣並左右置中 */
+        #seatingChartContent {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            box-sizing: border-box;
+            max-height: 100vh;
+            overflow: auto;
+            width: fit-content;
+            max-width: 100vw;
+            display: grid;
+        }
+
+        /* 座位表比視窗寬時（例如按組排列 9 組），白色區塊跟著撐開，改由外層左右捲動，不會被切掉 */
+        #seatingChartContent main2 {
+            min-width: max-content;
+        }
+
+        /* 班級選擇介面樣式 - 現代化設計 */
+        
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
+
+        #classSelectionOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(-45deg, #fbc2eb, #a6c1ee, #fdcbf1, #e6dee9);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        #classSelectionContainer {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 35px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12), inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+            padding: 40px 40px 30px;
+            max-width: 860px;
+            width: 100%;
+            max-height: 92vh;
+            overflow-y: auto;
+            text-align: center;
+            animation: float 6s ease-in-out infinite;
+            -ms-overflow-style: none;  
+            scrollbar-width: none;  
+        }
+        #classSelectionContainer::-webkit-scrollbar { 
+            display: none; 
+        }
+
+        #classSelectionTitle {
+            font-size: 2.8em;
+            margin: 0 0 25px 0;
+            font-weight: 900;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 3px 3px 6px rgba(106, 17, 203, 0.15);
+        }
+
+
+
+
+        
+        .class-item:last-child {
+            margin-bottom: 0;
+        }
+
+        
+
+        
+
+        
+
+        .enter-class-button {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 22px;
+            font-size: 1.05em;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(79, 172, 254, 0.3);
+            transition: all 0.3s ease;
+        }
+        .enter-class-button:hover {
+            box-shadow: 0 10px 25px rgba(79, 172, 254, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .delete-class-button {
+            background: linear-gradient(135deg, #ff0844 0%, #ffb199 100%);
+            color: #ffffff;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 18px;
+            font-size: 1.05em;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(255, 8, 68, 0.3);
+            transition: all 0.3s ease;
+        }
+        .delete-class-button:hover {
+            box-shadow: 0 10px 25px rgba(255, 8, 68, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .empty-class-list {
+            padding: 35px;
+            color: #777;
+            font-style: italic;
+            font-size: 1.2em;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            border: 2px dashed rgba(0, 0, 0, 0.1);
+        }
+
+        
+
+        
+            70% { box-shadow: 0 0 0 20px rgba(102, 126, 234, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+        }
+
+        
+        
+
+        
+
+        
+        
+
+        .class-input-container {
+            display: none;
+            margin-top: 30px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            animation: slideDown 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .class-input {
+            width: 100%;
+            padding: 20px 25px;
+            font-size: 1.4em;
+            border: 2px solid #e2e8f0;
+            border-radius: 18px;
+            box-sizing: border-box;
+            margin-bottom: 25px;
+            text-align: center;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+            color: #333;
+        }
+        .class-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: #ffffff;
+            box-shadow: 0 0 0 5px rgba(102, 126, 234, 0.15);
+        }
+
+        .confirm-add-button, .cancel-add-button {
+            padding: 16px 35px;
+            font-size: 1.15em;
+            border-radius: 15px;
+            margin: 0 10px;
+            font-weight: 800;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .confirm-add-button {
+            background: linear-gradient(135deg, #00b09b, #96c93d);
+            color: white;
+            border: none;
+            box-shadow: 0 6px 20px rgba(0, 176, 155, 0.3);
+        }
+        .confirm-add-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 176, 155, 0.5);
+        }
+
+        .cancel-add-button {
+            background: white;
+            color: #ef4444;
+            border: 2px solid #ef4444;
+        }
+        .cancel-add-button:hover {
+            background: #fef2f2;
+            transform: translateY(-3px);
+        }
+
+        
+
+
+        
+
+
+    
+        #classList {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+        }
+        
+        /* Update class-item to be a nice card */
+        .class-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            padding: 25px 20px;
+            margin-bottom: 0 !important; /* Override previous margin */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            /* Background will be dynamically applied via inline style */
+        }
+
+        .class-item:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            border-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .class-name {
+            font-size: 1.6em;
+            font-weight: 900;
+            margin-bottom: 15px;
+            text-align: center !important;
+            /* Text color will be dynamically set or we can use a soft dark grey */
+            color: #333;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 3px rgba(255,255,255,0.8);
+        }
+
+        .class-actions {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        /* Make buttons slightly smaller in the card grid */
+        .class-item .enter-class-button, .class-item .delete-class-button {
+            padding: 8px 16px;
+            font-size: 0.95em;
+            flex: 1;
+        }
+        /* ===== 主畫面分頁 ===== */
+        .main-tabs {
+            display: inline-flex;
+            gap: 6px;
+            padding: 6px;
+            margin-bottom: 25px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 30px;
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 覆蓋全站 button 預設的外距、陰影 */
+        #classSelectionContainer .main-tabs button,
+        #classSelectionContainer .main-tab-panel button {
+            margin: 0;
+            text-shadow: none;
+        }
+
+        #classSelectionContainer .main-link-button,
+        #classSelectionContainer .main-lock-button,
+        #classSelectionContainer .main-import-button,
+        #classSelectionContainer .main-tab-btn:not(.active) {
+            box-shadow: none;
+        }
+
+        #classSelectionContainer button.main-link-button {
+            margin-top: 14px;
+        }
+
+        .main-tab-btn {
+            white-space: nowrap;
+            border: none;
+            background: transparent;
+            color: #555;
+            font-family: inherit;
+            font-size: 1.05em;
+            font-weight: 800;
+            padding: 10px 24px;
+            border-radius: 24px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .main-tab-btn:hover {
+            color: #4f46e5;
+        }
+
+        .main-tab-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            box-shadow: 0 6px 16px rgba(118, 75, 162, 0.35);
+        }
+
+        .main-tab-panel {
+            display: none;
+            text-align: left;
+            animation: mainTabFade 0.35s ease;
+        }
+
+        .main-tab-panel.active {
+            display: block;
+        }
+
+        @keyframes mainTabFade {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 分頁一：功能介紹 */
+        .intro-lead {
+            text-align: center;
+            color: #555;
+            font-size: 1.05em;
+            line-height: 1.7;
+            margin: 0 0 20px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 14px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 18px;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 26px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            font-size: 1.8em;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .feature-card h3 {
+            margin: 0 0 6px;
+            font-size: 1.1em;
+            color: #333;
+        }
+
+        .feature-card p {
+            margin: 0;
+            font-size: 0.92em;
+            line-height: 1.6;
+            color: #666;
+        }
+
+        .main-start-button {
+            display: block;
+            margin: 25px auto 0;
+            border: none;
+            border-radius: 30px;
+            padding: 14px 40px;
+            font-family: inherit;
+            font-size: 1.15em;
+            font-weight: 800;
+            color: #fff;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 8px 20px rgba(118, 75, 162, 0.35);
+            cursor: pointer;
+            transition: transform 0.25s ease;
+        }
+
+        .main-start-button:hover {
+            transform: translateY(-3px);
+        }
+
+        /* 分頁二：編輯模式、班級 */
+        .main-section {
+            background: rgba(255, 255, 255, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            border-radius: 22px;
+            padding: 20px 22px;
+            margin-bottom: 18px;
+        }
+
+        .main-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .main-section-title {
+            font-size: 1.25em;
+            font-weight: 800;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .main-section-header .main-section-title {
+            margin-bottom: 0;
+        }
+
+        .main-section-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .main-status {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 4px 14px;
+            margin-bottom: 12px;
+        }
+
+        #overlayCloudStatus {
+            font-weight: 800;
+        }
+
+        #lastSavedTimeDisplay {
+            font-size: 13px;
+            color: #777;
+        }
+
+        .main-hint {
+            margin: 0 0 10px;
+            font-size: 0.92em;
+            color: #666;
+        }
+
+        .main-pass-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        #mainPassInput {
+            flex: 1;
+            min-width: 180px;
+            padding: 12px 16px;
+            font-family: inherit;
+            font-size: 1em;
+            border: 2px solid #e2e8f0;
+            border-radius: 14px;
+            background: #fff;
+            outline: none;
+        }
+
+        #mainPassInput:focus {
+            border-color: #667eea;
+        }
+
+        .main-remember {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #555;
+            cursor: pointer;
+        }
+
+        .main-unlock-button,
+        .main-lock-button,
+        .main-add-button,
+        .main-import-button {
+            border: none;
+            border-radius: 14px;
+            padding: 12px 20px;
+            font-family: inherit;
+            font-size: 1em;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .main-unlock-button:hover,
+        .main-lock-button:hover,
+        .main-add-button:hover,
+        .main-import-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .main-unlock-button {
+            background: linear-gradient(135deg, #00b09b, #96c93d);
+            color: #fff;
+        }
+
+        .main-lock-button {
+            background: #607D8B;
+            color: #fff;
+        }
+
+        .main-add-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            padding: 10px 16px;
+        }
+
+        .main-import-button {
+            background: #fff;
+            color: #555;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 10px 16px;
+        }
+
+        .main-link-button {
+            display: block;
+            margin-top: 12px;
+            padding: 0;
+            border: none;
+            background: none;
+            font-family: inherit;
+            font-size: 0.9em;
+            color: #667eea;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .main-link-button:hover {
+            text-decoration: underline;
+        }
+
+        #classSelectionContainer .class-input-container {
+            margin: 0 0 16px;
+            text-align: center;
+        }
+
+        #classSelectionContainer .class-input-container button {
+            margin: 0 6px;
+        }
+
+        @media (max-width: 600px) {
+            #classSelectionContainer {
+                padding: 25px 16px 20px;
+            }
+
+            #classSelectionTitle {
+                font-size: 1.8em;
+            }
+
+            .main-tab-btn {
+                padding: 10px 14px;
+                font-size: 0.95em;
+            }
+
+            #classList {
+                grid-template-columns: 1fr;
+            }
+        }
+
+    .footer-credits {
+            margin-top: 25px;
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .footer-credits a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer-credits a:hover {
+            text-decoration: underline;
+        }
+
+        .cc-license {
+            margin-top: 10px;
+            font-size: 0.8em;
+            color: #888;
+        }
+        /* 確保主要內容在班級選擇時隱藏，但排除雲端設定與說明視窗 */
+        body.class-selection-active>*:not(#classSelectionOverlay):not(#cloudSettingsOverlay) {
+            display: none !important;
+        }
+
+        /* Cloud Button */
+        .cloudButton {
+            background: #03A9F4;
+            color: #FFFFFF;
+            border: var(--theme-border);
+            border-radius: 16px;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-weight: 700;
+            text-shadow: none;
+            box-shadow: var(--theme-shadow);
+            padding: 15px 20px;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            white-space: nowrap;
+        }
+
+        .cloudButton:hover {
+            background: var(--theme-secondary);
+            transform: translate(2px, 2px);
+            box-shadow: var(--theme-shadow);
+        }
+
+        .cloudButton:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        .cloudButton.disabled {
+            background: #9E9E9E;
+            color: #BDBDBD;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .cloudButton.disabled:hover {
+            background: #9E9E9E;
+            transform: none;
+            box-shadow: var(--theme-shadow);
+        }
+
+        .cloudButton.disabled:active {
+            transform: none;
+            box-shadow: var(--theme-shadow);
+        }
+
+        /* 右下角浮動雲端按鈕 */
+        #floatingCloudButtons {
+            position: fixed;
+            right: 15px;
+            bottom: 45px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 990;
+        }
+
+        #floatingCloudButtons .cloudButton {
+            width: 56px;
+            height: 56px;
+            padding: 0;
+            border-radius: 50%;
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .load-cloud-button.disabled {
+            background: #9E9E9E !important;
+            color: #BDBDBD !important;
+            cursor: not-allowed !important;
+            opacity: 0.6;
+        }
+
+        /* Cloud Overlay Styles */
+        #cloudSettingsOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 20000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .version-badge {
+            font-size: 0.4em;
+            vertical-align: middle;
+            background: #F38020;
+            color: #FFFFFF;
+            -webkit-text-fill-color: #FFFFFF;
+            -webkit-text-stroke: 0;
+            text-shadow: none;
+            padding: 3px 10px;
+            border-radius: 12px;
+            margin-left: 6px;
+            white-space: nowrap;
+        }
+
+        #cloudSettingsPanel {
+            background: #FFF;
+            border: var(--theme-border);
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--theme-shadow);
+            font-family: 'Noto Sans TC', sans-serif;
+        }
+
+        #cloudSettingsPanel h2 {
+            margin-top: 0;
+            color: #03A9F4;
+            text-shadow: none;
+        }
+
+        #cloudSettingsPanel input[type="password"],
+        #cloudSettingsPanel input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: var(--theme-border);
+            font-family: 'Noto Sans TC', sans-serif;
+            box-sizing: border-box;
+        }
+
+        .cloud-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .cloud-actions button {
+            flex: 1;
+        }
+    
+
+
+
+
+

@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>教師課堂管理整合工具(更新日1140811)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&family=Bangers&family=Noto+Serif+TC:wght@700;900&family=Ma+Shan+Zheng&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- 班級選擇介面 -->
+    <div id="classSelectionOverlay">
+        <div id="classSelectionContainer">
+            <h1 id="classSelectionTitle">教師課堂管理整合工具 <span class="version-badge">cloudflareV1</span></h1>
+
+            <div class="main-tabs">
+                <button class="main-tab-btn" data-tab="intro" onclick="showMainTab('intro')">✨ 功能介紹</button>
+                <button class="main-tab-btn" data-tab="classes" onclick="showMainTab('classes')">🏫 班級與編輯模式</button>
+            </div>
+
+            <!-- 分頁一：功能介紹 -->
+            <div id="mainTabIntro" class="main-tab-panel">
+                <p class="intro-lead">一站整合課堂上最常用的管理工具，資料存在雲端，教室、辦公室的電腦都能開啟同一份資料。</p>
+                <div class="feature-grid">
+                    <div class="feature-card"><div class="feature-icon">⭐</div><h3>加扣分</h3><p>點日曆日期進入，個人或整組加扣分，排行榜與週／月統計圖表一目了然。</p></div>
+                    <div class="feature-card"><div class="feature-icon">🪑</div><h3>座位表</h3><p>依列或依組自動排座位，可拖曳調整，並直接在座位上加扣分。</p></div>
+                    <div class="feature-card"><div class="feature-icon">✅</div><h3>點名</h3><p>8 節課出缺席，點姓名或節次即可整列、整欄快速點名。</p></div>
+                    <div class="feature-card"><div class="feature-icon">📝</div><h3>作業登記與檢核</h3><p>登記每日作業、投影聯絡簿，用顏色標記未交、已交、待訂正。</p></div>
+                    <div class="feature-card"><div class="feature-icon">📊</div><h3>作業追蹤</h3><p>依日期區間或依學生查詢缺交與訂正情形，追作業不再混亂。</p></div>
+                    <div class="feature-card"><div class="feature-icon">👥</div><h3>分組</h3><p>設定組數並拖曳分組，搭配整組加扣分進行小組競賽。</p></div>
+                    <div class="feature-card"><div class="feature-icon">🎲</div><h3>抽籤</h3><p>輪盤動畫加音效隨機抽出學生，已抽過的不會重複。</p></div>
+                    <div class="feature-card"><div class="feature-icon">⏱️</div><h3>計時器</h3><p>預設或自訂倒數時間，最後 10 秒有倒數音效提醒。</p></div>
+                    <div class="feature-card"><div class="feature-icon">🏆</div><h3>兌獎</h3><p>學生用累積點數兌換獎勵，自動記錄所有兌換歷史。</p></div>
+                    <div class="feature-card"><div class="feature-icon">📄</div><h3>報表下載</h3><p>匯出作業清單 PDF、加扣分總表 Word，親師溝通與成績結算更省時。</p></div>
+                    <div class="feature-card"><div class="feature-icon">💾</div><h3>匯出／匯入</h3><p>單一班級或全部班級備份成檔案，隨時還原。</p></div>
+                    <div class="feature-card"><div class="feature-icon">☁️</div><h3>雲端同步</h3><p>未輸入密碼只能查看；輸入密碼進入編輯模式後，修改會自動存到雲端。</p></div>
+                </div>
+                <button class="main-start-button" onclick="showMainTab('classes')">開始使用 →</button>
+            </div>
+
+            <!-- 分頁二：編輯密碼、新增班級、班級列表 -->
+            <div id="mainTabClasses" class="main-tab-panel">
+                <div class="main-section">
+                    <div class="main-section-title">🔐 編輯模式</div>
+                    <div class="main-status">
+                        <span id="overlayCloudStatus">檢查連線中...</span>
+                        <span id="lastSavedTimeDisplay">上次儲存時間: 未知</span>
+                    </div>
+                    <div id="mainUnlockGroup">
+                        <p id="mainPassHint" class="main-hint">未輸入密碼時只能查看資料，輸入管理密碼後才能新增班級或修改資料。</p>
+                        <div class="main-pass-row">
+                            <input type="password" id="mainPassInput" placeholder="請輸入管理密碼"
+                                onkeypress="if(event.key==='Enter') unlockFromMain()">
+                            <button class="main-unlock-button" onclick="unlockFromMain()">🔓 進入編輯模式</button>
+                        </div>
+                        <label class="main-remember">
+                            <input type="checkbox" id="mainRememberPass">
+                            在這台電腦記住密碼（教室公用電腦請勿勾選）
+                        </label>
+                    </div>
+                    <div id="mainLockGroup">
+                        <button class="main-lock-button" onclick="lockEditMode()">🔒 離開編輯模式（鎖定）</button>
+                    </div>
+                    <button class="main-link-button" onclick="showCloudSettings()">⚙️ 更多雲端設定（立即上傳、從舊版搬移資料、分享網址）</button>
+                </div>
+
+                <div class="main-section">
+                    <div class="main-section-header">
+                        <div class="main-section-title">📚 已建立的班級</div>
+                        <div class="main-section-actions">
+                            <button class="main-add-button" onclick="showAddClassInput()">➕ 新增班級</button>
+                            <button class="main-import-button" onclick="document.getElementById('importClassFile').click();">📥 匯入資料</button>
+                        </div>
+                    </div>
+
+                    <div class="class-input-container" id="classInputContainer" style="display: none;">
+                        <input type="text" class="class-input" id="classNameInput" placeholder="請輸入班級名稱"
+                            onkeypress="if(event.key==='Enter') confirmAddClass()">
+                        <div style="margin-top: 10px;">
+                            <button class="confirm-add-button" onclick="confirmAddClass()">確認</button>
+                            <button class="cancel-add-button" onclick="hideAddClassInput()">取消</button>
+                        </div>
+                    </div>
+
+                    <div id="classList">
+                        <div class="empty-class-list">尚未建立任何班級</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-credits">
+                <div>Made by <a href="https://kentxchang.blogspot.tw" target="_blank">阿剛老師</a></div>
+                <div class="cc-license">
+                    本作品採用<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">創用 CC 姓名標示-非商業性-相同方式分享 4.0 國際 授權條款</a>授權。<br>
+                    僅供教育使用，禁止商業營利用途。
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 側邊選單切換按鈕 -->
+    <button id="menuToggle" onclick="toggleSideMenu()">☰</button>
+
+    <!-- 側邊選單 -->
+    <div id="sideMenu">
+        <div class="menu-section">
+            <button class="menu-button student-input" onclick="showStudentNamesInput(); closeSideMenu();">
+                👥 輸入學生姓名
+            </button>
+            <button class="menu-button group-manage" id="groupButton"
+                onclick="handleGroupButtonClick(); closeSideMenu();">
+                🔀 學生分組
+            </button>
+            <button class="menu-button reward-system" onclick="showRedeemOverlay(); closeSideMenu();">
+                🏆 兌獎
+            </button>
+        </div>
+
+        <div class="menu-section">
+                                    <button class="menu-button export-data" style="background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); color: white; border: none; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); margin-bottom: 10px;" onclick="openScoreDocDialog(); closeSideMenu();">
+                📊 下載加扣分總表
+            </button>
+<button class="menu-button export-data" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; border: none; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);" onclick="openHomeworkPdfDialog(); closeSideMenu();">
+                📄 下載作業清單
+            </button>
+<button class="menu-button export-data" onclick="showExportOptions(); closeSideMenu();">
+                📤 匯出資料
+            </button>
+            <button class="menu-button import-data"
+                onclick="document.getElementById('importFile').click(); closeSideMenu();">
+                📥 匯入資料
+            </button>
+        </div>
+
+        <div class="menu-section">
+            <button class="menu-button reset-data" onclick="confirmReset(); closeSideMenu();">
+                🔄 重置
+            </button>
+            <button class="menu-button class-selection" onclick="showClassSelection(); closeSideMenu();"
+                style="background: linear-gradient(135deg, #FF6B6B 0%, #FF8A80 100%); color: white;">
+                🏫 班級選擇
+            </button>
+        </div>
+
+        <div class="menu-section">
+            <h5
+                style="margin: 0 0 12px 0; color: #000000; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; text-shadow: 2px 2px 0px #FFEB3B; font-family: 'Noto Sans TC', sans-serif;">
+                </h5>
+            
+            
+            
+            
+
+            <button class="menu-button" style="background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); color: white; border: none; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3); margin-top: 15px;" onclick="openUserGuide(); closeSideMenu();">
+                👨‍🏫 教學應用指南
+            </button>
+        </div>
+    </div>
+
+    <div id="header">
+        <div class="header-spacer"></div>
+        <h1>教師課堂管理整合工具 <span id="currentClassName" style="font-size: 0.85em; color: var(--theme-text); background: var(--theme-card-bg); padding: 4px 12px; border-radius: 20px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; box-shadow: var(--theme-shadow); border: var(--theme-border); vertical-align: middle; text-shadow: none; -webkit-text-stroke: 0;" onclick="showClassSelection()" title="切換班級"></span></h1>
+        <div class="header-buttons">
+            <button class="seatingChartButton" onclick="showSeatingChart()">座位表</button>
+            <button class="homeworkTrackingButton" onclick="showHomeworkTracking()">作業追蹤</button>
+            <button class="lotteryButton" onclick="showLottery()">抽籤</button>
+            <button class="timerButton" onclick="showTimer()">計時</button>
+        </div>
+    </div>
+
+    <div id="calendar">
+        <div id="calendarHeader">
+            <button onclick="changeMonth(-1)">上一個月</button>
+            <h2 id="calendarMonth"></h2>
+            <button class="monthlySummaryButton" onclick="showMonthlySummary()">每月統計</button>
+            <button onclick="changeMonth(1)">下一個月</button>
+        </div>
+        <div id="calendarDays">
+            <div class="calendarHeaderDay">日</div>
+            <div class="calendarHeaderDay">一</div>
+            <div class="calendarHeaderDay">二</div>
+            <div class="calendarHeaderDay">三</div>
+            <div class="calendarHeaderDay">四</div>
+            <div class="calendarHeaderDay">五</div>
+            <div class="calendarHeaderDay">六</div>
+            <div class="calendarHeaderDay">統計</div>
+        </div>
+    </div>
+
+    <div id="studentNamesInputOverlay" onclick="hideStudentNamesInput()"></div>
+    <div id="studentNamesInput">
+        <div class="sn-header">
+            <h3>👥 學生名單管理 <span id="studentCountBadge" class="sn-count"></span></h3>
+            <button class="sn-close" onclick="hideStudentNamesInput()" title="關閉">✕</button>
+        </div>
+
+        <div class="sn-add">
+            <input type="text" id="newStudentName" placeholder="輸入學生姓名後按 Enter 或「新增」"
+                onkeydown="if (event.key === 'Enter') addStudentRow()">
+            <button class="sn-btn sn-btn-add" onclick="addStudentRow()">➕ 新增</button>
+            <button class="sn-btn sn-btn-light" onclick="toggleBulkAdd()">📋 批次新增</button>
+        </div>
+        <div id="bulkAddBox" class="sn-bulk">
+            <textarea id="studentNames" placeholder="每行輸入一個學生姓名，可直接從 Excel 貼上整欄"></textarea>
+            <button class="sn-btn sn-btn-add" onclick="addBulkStudents()">加入名單</button>
+        </div>
+
+        <div id="studentEditList" class="sn-list"></div>
+
+        <div class="sn-footer">
+            <span class="sn-hint">修改姓名或刪除後，按「儲存變更」才會生效</span>
+            <button class="sn-btn sn-btn-light" onclick="hideStudentNamesInput()">取消</button>
+            <button class="sn-btn sn-btn-save" onclick="submitNames()">💾 儲存變更</button>
+        </div>
+    </div>
+
+    <!-- 抽籤系統 -->
+    <div id="lotteryOverlay" onclick="hideLottery()"></div>
+    <div id="lotteryPanel">
+        <h3>學生抽籤系統</h3>
+        <div id="lotteryStudentGrid"></div>
+        <div class="lottery-buttons">
+            <button id="drawButton" onclick="drawStudent()">抽籤</button>
+            <button id="resetLotteryButton" onclick="resetLottery()">全部重抽</button>
+            <button onclick="hideLottery()">關閉</button>
+        </div>
+    </div>
+
+    <!-- 抽中學生全螢幕顯示 -->
+    <div id="winnerDisplay">
+        <div id="winnerName"></div>
+    </div>
+
+    <!-- 計時器系統 -->
+    <div id="timerOverlay" onclick="hideTimer()"></div>
+    <div id="timerPanel">
+        <h3>倒數計時器</h3>
+        <div class="timer-presets">
+            <button onclick="setTimer(60)">1分鐘</button>
+            <button onclick="setTimer(180)">3分鐘</button>
+            <button onclick="setTimer(300)">5分鐘</button>
+        </div>
+        <div class="timer-custom">
+            <label>自訂時間：</label>
+            <input type="number" id="customMinutes" min="0" max="59" value="0" placeholder="分">分
+            <input type="number" id="customSeconds" min="0" max="59" value="30" placeholder="秒">秒
+            <button onclick="setCustomTimer()">設定</button>
+        </div>
+        <div class="timer-controls">
+            <button id="startTimerButton" onclick="startTimer()" disabled>開始計時</button>
+            <button onclick="hideTimer()">關閉</button>
+        </div>
+    </div>
+
+    <!-- 計時器全螢幕顯示 -->
+    <div id="timerDisplay">
+        <div id="timerTime"></div>
+        <div class="timer-fullscreen-controls">
+            <button id="pauseTimerButton" onclick="pauseTimer()">暫停</button>
+            <button id="resumeTimerButton" onclick="resumeTimer()" style="display: none;">繼續</button>
+            <button id="stopTimerButton" onclick="stopTimer()">停止</button>
+        </div>
+    </div>
+
+    <div id="groupCountOverlay" onclick="hideGroupCount()">
+        <div id="groupCount" onclick="event.stopPropagation()">
+            <h3 style="font-family: 'Noto Sans TC', sans-serif; color: #000;">設定分組數量</h3>
+            <p style="font-family: 'Noto Sans TC', sans-serif; color: #000;">設定分幾組：</p>
+            <input type="number" id="groupCountInput" value="2" min="1"
+                style="border: 3px solid #000; font-family: 'Noto Sans TC', sans-serif; box-shadow: 2px 2px 0px #000; padding: 8px; margin: 10px;">
+            <button onclick="submitGroupCount()"
+                style="border: 3px solid #000; background: #32CD32; color: #000; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; box-shadow: 4px 4px 0px #000; padding: 10px 20px; margin: 5px; transition: transform 0.2s ease;">送出</button>
+            <button id="adjustGroupsButton"
+                style="display: none; border: 3px solid #000; background: #FFD700; color: #000; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; box-shadow: 4px 4px 0px #000; padding: 10px 20px; margin: 5px; transition: transform 0.2s ease;"
+                onclick="showGroupStudents()">調整分組</button>
+        </div>
+    </div>
+
+    <div id="groupStudentsOverlay" onclick="hideGroupStudents()">
+        <div id="groupStudents" onclick="event.stopPropagation()">
+            <h3 style="font-family: 'Noto Sans TC', sans-serif; color: #000;">設定分組</h3>
+            <div id="groupContainer" class="groupContainer"></div>
+            <button onclick="submitGroups()"
+                style="border: 3px solid #000; background: #32CD32; color: #000; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; box-shadow: 4px 4px 0px #000; padding: 10px 20px; margin: 10px; transition: transform 0.2s ease;">送出</button>
+            <button id="adjustGroupsButton"
+                style="display: none; border: 3px solid #000; background: #FFD700; color: #000; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; box-shadow: 4px 4px 0px #000; padding: 10px 20px; margin: 10px; transition: transform 0.2s ease;"
+                onclick="adjustGroups()">調整分組</button>
+        </div>
+    </div>
+
+    <div id="inputSection">
+        <div id="controlSection" class="control-buttons">
+            <button onclick="goBack()"
+                style="border: 3px solid #000; background: #FF69B4; color: #000; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; box-shadow: 4px 4px 0px #000; padding: 10px 15px; transition: transform 0.2s ease;">回上一頁</button>
+            <button onclick="showScoreSection()"
+                style="border: 3px solid #000; background: #32CD32; color: #000; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; box-shadow: 4px 4px 0px #000; padding: 10px 15px; transition: transform 0.2s ease;">加扣分</button>
+            <button onclick="showChartSection()"
+                style="border: 3px solid #000; background: #FFD700; color: #000; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; box-shadow: 4px 4px 0px #000; padding: 10px 15px; transition: transform 0.2s ease;">呈現直條圖</button>
+            <button onclick="showAttendance()"
+                style="border: 3px solid #000; background: #FF4444; color: #000; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; box-shadow: 4px 4px 0px #000; padding: 10px 15px; transition: transform 0.2s ease;">點名</button>
+
+        </div>
+        <div id="selectedDate"></div>
+        <div id="viewToggleSection" style="display: none; text-align: center; margin: 10px 0;">
+            <button onclick="showScoreSection()" id="tableViewBtn"
+                style="border: 3px solid #000; background: #32CD32; color: #000; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; box-shadow: 4px 4px 0px #000; padding: 8px 15px; margin: 0 5px; transition: transform 0.2s ease;">表格視圖</button>
+            <button onclick="showSeatingViewSection()" id="seatingViewBtn"
+                style="border: 3px solid #000; background: #FF9800; color: #000; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; box-shadow: 4px 4px 0px #000; padding: 8px 15px; margin: 0 5px; transition: transform 0.2s ease;">座位表視圖</button>
+        </div>
+        <div id="scoreSection" class="centered-section">
+            <div id="studentScoreTable"></div>
+            <div id="groupScoreTable"></div>
+        </div>
+        <div id="seatingViewSection" style="display: none;">
+            <div id="seatingScoreChart"></div>
+        </div>
+        <div id="chartSection">
+            <canvas id="chart"></canvas>
+        </div>
+    </div>
+
+    <div id="checklistSection">
+        <div class="control-buttons">
+            <button onclick="saveAndBack()"
+                style="border: 3px solid #000; background: #FF69B4; color: #000; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; box-shadow: 4px 4px 0px #000; padding: 10px 15px; transition: transform 0.2s ease;">回上一頁</button>
+            <button class="status-toggle-button" onclick="toggleStatusTables()"
+                style="border: 3px solid #000; background: #32CD32; color: #000; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; box-shadow: 4px 4px 0px #000; padding: 10px 15px; transition: transform 0.2s ease;">作業狀態</button>
+            <button class="export-button" onclick="exportImage()"
+                style="border: 3px solid #000; background: #FFD700; color: #000; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; box-shadow: 4px 4px 0px #000; padding: 10px 15px; transition: transform 0.2s ease;">匯出圖片</button>
+            <button onclick="toggleHideStudents()" id="toggleHideBtn"
+                style="border: 3px solid #000; background: #9370DB; color: #000; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; box-shadow: 4px 4px 0px #000; padding: 10px 15px; transition: transform 0.2s ease;">隱藏已繳交作業學生</button>
+        </div>
+        <h3 id="checklistDate"></h3>
+        <div id="statusContainer"
+            style="display: none; flex-wrap: wrap; justify-content: space-between; background-color: white;"></div>
+        <div class="tables-container-wrapper">
+            <div id="tablesContainer" style="display: flex; flex-wrap: wrap; justify-content: center;"></div>
+        </div>
+    </div>
+
+    <div id="weeklySummaryOverlay" class="overlay" onclick="hideWeeklySummary()">
+        <div id="weeklySummaryContent" class="overlayContent" onclick="event.stopPropagation()">
+            <div class="summary-text-overlay" id="weeklySummaryText">每週統計</div>
+            <div class="summarySection">
+                <div id="weeklyScoreSection"></div>
+                <canvas id="weeklyChart" style="width: 50%; height: 175px;"></canvas>
+            </div>
+            <div class="rightArrow" onclick="slideRight('weeklySummaryContent')">&#9654;</div>
+            <div class="leftArrow" onclick="slideLeft('weeklySummaryContent')" style="display: none;">&#9664;</div>
+        </div>
+    </div>
+
+    <div id="monthlySummaryOverlay" class="overlay" onclick="hideWeeklySummary()">
+        <div id="monthlySummaryContent" class="overlayContent" onclick="event.stopPropagation()">
+            <div class="summary-text-overlay" id="monthlySummaryText">每月統計</div>
+            <div class="summarySection">
+                <div id="monthlyScoreSection"></div>
+                <canvas id="monthlyChart" style="width: 50%; height: 175px;"></canvas>
+            </div>
+            <div class="rightArrow" onclick="slideRight('monthlySummaryContent')">&#9654;</div>
+            <div class="leftArrow" onclick="slideLeft('monthlySummaryContent')" style="display: none;">&#9664;</div>
+        </div>
+    </div>
+
+    <div id="footer">
+        Designed by <a href="https://kentxchang.blogspot.tw" target="_blank">阿剛老師</a>
+    </div>
+
+    <div id="floatingCloudButtons">
+        <button id="saveCloudBtn" class="cloudButton" onclick="syncToCloud()" title="立即雲端存檔">☁️</button>
+        <button id="editModeBtn" class="cloudButton" onclick="toggleEditMode()" title="檢視模式（點此輸入密碼）" style="background: #607D8B;">🔒</button>
+    </div>
+
+    <div id="homeworkOverlay" class="overlay" onclick="hideOverlay(event, 'homeworkOverlay')">
+        <div class="overlayContent" onclick="event.stopPropagation()" style="max-height: 60%; min-height: 40%;">
+            <h3 id="homeworkDate"></h3>
+            <textarea id="homeworkText" placeholder="每行輸入一項作業"
+                style="width: 90%; height: 200px; border: 3px solid #000; font-family: 'Noto Sans TC', sans-serif; box-shadow: 4px 4px 0px #000; padding: 10px;"></textarea><br>
+            <button onclick="submitHomework()"
+                style="border: 3px solid #000; background: #32CD32; color: #000; font-family: 'Noto Sans TC', sans-serif; font-weight: 700; box-shadow: 4px 4px 0px #000; padding: 10px 20px; margin-top: 15px; transition: transform 0.2s ease;">送出</button>
+        </div>
+    </div>
+
+    <div id="viewHomeworkOverlay" class="overlay" onclick="hideOverlay(event, 'viewHomeworkOverlay')">
+        <div class="overlayContent" onclick="event.stopPropagation()">
+            <ul id="assignmentList" class="homeworkContent"></ul>
+            <h3 id="viewHomeworkDate"></h3>
+        </div>
+    </div>
+
+    <!-- 點名 Overlay -->
+    <div id="attendanceOverlay" class="overlay" onclick="hideAttendance()">
+        <div id="attendanceContent" class="overlayContent" onclick="event.stopPropagation()"
+            style="width: 90%; max-height: 80%; overflow-y: auto;">
+            <h2>今日點名紀錄</h2>
+            <div id="attendanceTableContainer"></div>
+        </div>
+    </div>
+
+
+    <!-- 隱藏的檔案輸入，給側邊選單的匯入功能使用 -->
+    <input type="file" id="importFile" style="display: none;" onchange="importData(event)">
+
+    <!-- 隱藏的檔案輸入，給班級選擇介面的匯入功能使用 -->
+    <input type="file" id="importClassFile" style="display: none;" onchange="importClassData(event)" accept=".json">
+
+    <!-- 匯出選項對話框 -->
+    <div id="exportOptionsOverlay" class="overlay" onclick="hideExportOptions()">
+        <div class="overlayContent" onclick="event.stopPropagation()" style="max-width: 400px; padding: 30px;">
+            <h2
+                style="text-align: center; margin-bottom: 20px; font-family: 'Noto Sans TC', sans-serif; font-weight: bold; font-size: 2em; color: #000000; text-shadow: 2px 2px 0px #FFEB3B;">
+                匯出選項</h2>
+
+            <div style="margin-bottom: 20px;">
+                <div style="font-size: 1.1em; font-weight: 700; margin-bottom: 15px; color: #000000;">選擇匯出範圍：</div>
+
+                <button onclick="exportSingleClass()" style="
+                    width: 100%; 
+                    padding: 15px; 
+                    margin-bottom: 10px; 
+                    background: linear-gradient(135deg, #2196F3 0%, #42A5F5 100%);
+                    color: white;
+                    border: 3px solid #000000;
+                    border-radius: 0;
+                    font-size: 1.1em;
+                    font-weight: 700;
+                    font-family: 'Noto Sans TC', sans-serif;
+                    cursor: pointer;
+                    box-shadow: 4px 4px 0px #000000;
+                    transition: all 0.1s ease;
+                ">
+                    📋 匯出當前班級 (${currentClass || '未選擇'})
+                </button>
+
+                <button onclick="exportAllClasses()" style="
+                    width: 100%; 
+                    padding: 15px; 
+                    margin-bottom: 20px;
+                    background: linear-gradient(135deg, #4CAF50 0%, #66BB6A 100%);
+                    color: white;
+                    border: 3px solid #000000;
+                    border-radius: 0;
+                    font-size: 1.1em;
+                    font-weight: 700;
+                    font-family: 'Noto Sans TC', sans-serif;
+                    cursor: pointer;
+                    box-shadow: 4px 4px 0px #000000;
+                    transition: all 0.1s ease;
+                ">
+                    📚 匯出所有班級
+                </button>
+
+                <button onclick="hideExportOptions()" style="
+                    width: 100%; 
+                    padding: 10px;
+                    background: linear-gradient(135deg, #FF9800 0%, #FFB74D 100%);
+                    color: #000000;
+                    border: 3px solid #000000;
+                    border-radius: 0;
+                    font-size: 1em;
+                    font-weight: 700;
+                    font-family: 'Noto Sans TC', sans-serif;
+                    cursor: pointer;
+                    box-shadow: 4px 4px 0px #000000;
+                    transition: all 0.1s ease;
+                ">
+                    取消
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="seatingChartOverlay" class="overlay" onclick="hideSeatingChart()">
+        <div id="seatingChartContent" class="overlayContent" onclick="event.stopPropagation()">
+            <header2>
+                <h1>教室座位表生成器</h1>
+            </header2>
+            <main2>
+                <div id="inputSection2">
+                    <section2>
+                        <h22></h22>
+                        <button2 id="inputButton2">輸入學生</button2>
+                    </section2>
+                </div>
+                <div id="selectSection2">
+                    <section2>
+                        <h22>選擇分組方式</h22>
+                        <label>分組方式：
+                            <select id="groupingMethod2">
+                                <option value="">請選擇</option>
+                                <option value="byColumn">按列分組</option>
+                                <option value="byGroup">按組分組</option>
+                            </select>
+                        </label>
+                    </section2>
+                </div>
+                <div id="settingsSection2">
+                    <section2>
+                        <h22>座位表設置</h22>
+                        <label>列數：<input type="number" id="columns2" min="1" value="5"></label>
+                        <button2 id="generateButton2">生成座位表</button2>
+                    </section2>
+                </div>
+                <div id="groupSettingsSection2">
+                    <section2>
+                        <h22>分組設置</h22>
+                        <label>組數：<input type="number" id="groups2" min="1" max="9" value="9"></label>
+                        <button2 id="groupButton2">按組排列座位</button2>
+                    </section2>
+                </div>
+                <section2>
+                    <h22>座位表</h22>
+                    <div id="seatingChart2"></div>
+                </section2>
+                <section2>
+                    <h22>選項</h22>
+                    <button2 id="saveButton2">保存座位表</button2>
+                    <button2 id="loadButton2">加載座位表</button2>
+                    <button2 id="previewButton2">預覽座位表</button2>
+                    <button2 id="resetButton2">重置</button2>
+                </section2>
+            </main2>
+        </div>
+    </div>
+
+    <div id="homeworkTrackingOverlay" class="overlay" onclick="hideHomeworkTracking()">
+        <div id="homeworkTrackingContent" class="overlayContent" onclick="event.stopPropagation()">
+            <h3>作業追蹤</h3>
+
+            <!-- 分頁按鈕 -->
+            <div class="homework-tabs">
+                <button class="homework-tab-btn active" onclick="showHomeworkTab('dateRange')">依日期區間</button>
+                <button class="homework-tab-btn" onclick="showHomeworkTab('student')">依學生查詢</button>
+                <button class="homework-tab-btn" onclick="showHomeworkTab('list')">作業列表</button>
+            </div>
+
+            <!-- 依日期區間分頁 -->
+            <div id="homeworkTabDateRange" class="homework-tab-content active">
+                <div class="homework-search-container">
+                    <div class="homework-search-panel date-search-panel">
+                        <h4>依日期區間搜尋未完成</h4>
+                        <p>選擇日期區間：</p>
+                        <input type="date" id="homeworkTrackingStart" /> 到 <input type="date"
+                            id="homeworkTrackingEnd" />
+                        <br><br>
+                        <button onclick="searchHomeworkTracking()">搜尋</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 依學生查詢分頁 -->
+            <div id="homeworkTabStudent" class="homework-tab-content">
+                <div class="homework-search-container">
+                    <div class="homework-search-panel student-search-panel">
+                        <h4>依學生查詢未完成</h4>
+                        <p>選擇學生：</p>
+                        <select id="studentHomeworkSelect" style="padding: 5px;"></select>
+                        <button onclick="searchHomeworkByStudent()">查詢</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 作業列表分頁 -->
+            <div id="homeworkTabList" class="homework-tab-content">
+                <div class="homework-search-container">
+                    <div class="homework-search-panel homework-list-panel">
+                        <h4>作業列表查詢</h4>
+                        <p>選擇日期區間（選填）：</p>
+                        <input type="date" id="homeworkListStart" /> 到 <input type="date" id="homeworkListEnd" />
+                        <br><br>
+                        <p>關鍵字搜尋（選填）：</p>
+                        <input type="text" id="homeworkListKeyword" placeholder="輸入作業關鍵字" style="width: 300px;" />
+                        <br><br>
+                        <p style="font-size: 12px; color: #666;">※ 可只選日期、只輸入關鍵字，或兩者結合查詢</p>
+                        <button onclick="searchHomeworkList()">查詢</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="homeworkTrackingResult"
+                style="margin-top:20px; text-align:left; position:relative; max-height: 400px; overflow-y: auto;"></div>
+        </div>
+    </div>
+
+    <div id="redeemOverlay" class="overlay" onclick="hideRedeemOverlay()">
+        <div id="redeemOverlayContent" onclick="event.stopPropagation()">
+            <h1>學生加扣分管理與兌換獎勵工具</h1>
+            <div class="container">
+                <div class="top-bar">
+                    <label class="import-label" onclick="renderStudentTable()">更新資料顯示</label>
+                    <div>
+                        <button onclick="sortTableByGroup()" class="button">按小組排序</button>
+                        <button onclick="sortTableByScore()" class="button">按得分排序</button>
+                    </div>
+                </div>
+
+                <table id="studentTable">
+                    <thead>
+                        <tr>
+                            <th>學生姓名</th>
+                            <th>總得分</th>
+                            <th>兌換獎勵</th>
+                            <th>兌換記錄</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <button onclick="saveRedemptionHistoryAsDoc()" class="button">另存兌獎紀錄</button>
+            </div>
+
+            <div class="reset-container">
+                <button onclick="resetRedemptionData()" class="button reset-button">重置本頁兌換紀錄</button>
+            </div>
+
+            <div class="modal-overlay" id="redeemModal">
+                <div class="modal-content">
+                    <h3>兌換獎勵</h3>
+                    <input type="number" id="redeemPoints" placeholder="輸入兌換分數" min="1">
+                    <input type="text" id="redeemContent" placeholder="輸入兌換內容 (可選)">
+                    <button onclick="confirmRedeem()" class="button" style="margin-top: 10px;">確認兌換</button>
+                    <button onclick="closeModal()" class="button reset-button" style="margin-top: 10px;">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas"></script>
+    <script src="js/00-class-core.js"></script>
+    <script src="js/01-menu-students.js"></script>
+    <script src="js/02-calendar.js"></script>
+    <script src="js/03-attendance.js"></script>
+    <script src="js/04-scores.js"></script>
+    <script src="js/05-homework.js"></script>
+    <script src="js/06-import-export.js"></script>
+    <script src="js/07-theme.js"></script>
+    <script src="js/08-groups.js"></script>
+    <script src="js/09-seating-chart.js"></script>
+    <script src="js/10-homework-tracking.js"></script>
+    <script src="js/11-redeem.js"></script>
+    <script src="js/12-lottery.js"></script>
+    <script src="js/13-timer.js"></script>
+    <script src="js/14-sound.js"></script>
+
+    <!-- Cloud Settings Overlay -->
+    <div id="cloudSettingsOverlay" onclick="if(event.target===this) hideCloudSettings()">
+        <div id="cloudSettingsPanel">
+            <h2>☁️ 雲端設定與編輯模式</h2>
+
+            <div class="setting-group">
+                <h3>1. 編輯模式</h3>
+                <p>目前模式: <span id="editModeStatus">👀 檢視模式</span></p>
+                <div id="unlockGroup">
+                    <p id="cloudPassHint">未輸入密碼時只能查看資料。請輸入管理密碼進入編輯模式。</p>
+                    <input type="password" id="cloudPassInput" placeholder="請輸入管理密碼" onkeypress="if(event.key==='Enter') saveCloudSettings()" />
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 14px;">
+                        <input type="checkbox" id="rememberPassInput" style="width: 18px; height: 18px;">
+                        在這台電腦記住密碼（教室公用電腦請勿勾選）
+                    </label>
+                    <button onclick="saveCloudSettings()"
+                        style="background:#4CAF50; color:white; padding: 10px; border: none; cursor: pointer; width: 100%; margin-top: 10px;">🔓 進入編輯模式</button>
+                </div>
+                <button id="lockGroup" onclick="lockEditMode()"
+                    style="display:none; background:#607D8B; color:white; padding: 10px; border: none; cursor: pointer; width: 100%;">🔒 離開編輯模式（鎖定）</button>
+            </div>
+
+            <hr style="border: 2px solid #000; margin: 20px 0;">
+
+            <div class="setting-group">
+                <h3>2. 雲端同步</h3>
+                <p>狀態: <span id="cloudStatus">未連線</span></p>
+                <p style="font-size: 13px; color: #666;">編輯模式下，資料修改後約 5 秒會自動上傳（只上傳有變動的部分）。</p>
+                <div class="cloud-actions">
+                    <button id="cloudSaveBtn" onclick="syncToCloud()"
+                        style="background:#2196F3; color:white; padding: 10px; border: none; cursor: pointer;">⬆️
+                        立即上傳到雲端</button>
+                </div>
+            </div>
+
+            <hr style="border: 2px solid #000; margin: 20px 0;">
+
+            <div class="setting-group">
+                <h3>3. 從舊版（GAS 試算表）搬移資料</h3>
+                <p style="font-size: 13px; color: #666;">只需做一次（需在編輯模式）。貼上舊版的 GAS Web App 網址，會把舊資料全部複製到 Cloudflare 資料庫（會覆蓋目前資料）。</p>
+                <input type="text" id="gasImportUrlInput" placeholder="https://script.google.com/macros/s/.../exec" />
+                <button onclick="importFromGas()"
+                    style="background:#FF9800; color:white; padding: 10px; border: none; cursor: pointer; width: 100%;">📦 匯入舊版資料</button>
+            </div>
+
+            <hr style="border: 2px solid #000; margin: 20px 0;">
+
+            <div class="setting-group">
+                <h3>4. 分享網址</h3>
+                <p style="font-size: 13px; color: #666;">用其他電腦打開此網址即可查看資料；要修改資料仍須輸入密碼。</p>
+                <button onclick="generateShareLink()"
+                    style="background:#9C27B0; color:white; padding: 10px; border: none; cursor: pointer; width: 100%;">🔗
+                    產生網址 & QR Code</button>
+                <input type="text" id="shareUrlInput" readonly placeholder="點擊上方按鈕產生連結" onclick="this.select()"
+                    style="margin-top:10px;">
+                <button onclick="copyShareUrl()" style="margin-top:5px; padding: 5px; cursor: pointer;">📋 複製連結</button>
+                <div style="text-align:center; margin-top:10px;">
+                    <img id="qrCodeImage" src=""
+                        style="display:none; max-width:150px; border:2px solid #000; margin:0 auto;">
+                </div>
+            </div>
+
+            <button onclick="hideCloudSettings()"
+                style="background:#F44336; color:white; margin-top:20px; width:100%; padding: 10px; border: none; cursor: pointer;">關閉</button>
+        </div>
+    </div>
+
+    <script src="js/90-cloud-sync.js"></script>
+
+
+    <div id="cloudLoadingOverlay"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:99999; justify-content:center; align-items:center; flex-direction:column;">
+        <div
+            style="width: 50px; height: 50px; border: 5px solid #f3f3f3; border-top: 5px solid #3498db; border-radius: 50%; animation: spin 1s linear infinite;">
+        </div>
+        <h2 style="color:white; margin-top:20px; font-family: 'Noto Sans TC', sans-serif;">☁️ 雲端存檔中...</h2>
+    </div>
+    <style>
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+
+    <!-- PDF Generation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="js/91-user-guide.js"></script>
+    <script src="js/92-homework-pdf.js"></script>
+
+</body>
+
+</html>
